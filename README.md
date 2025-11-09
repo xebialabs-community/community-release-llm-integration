@@ -14,23 +14,55 @@ project:
 * Python 3
 * Docker
 
-## Quickstart
-
-### 1. Configure your `hosts` file
+### Configure your `hosts` file
 
 Add the following to `/etc/hosts` or `C:\Windows\System32\drivers\etc\hosts` (sudo / administrator permissions
 required):
 
     127.0.0.1 container-registry
 
-### 2. Start the Release environment:
+## Start the development environment
+
+This project comes with a Docker environment that sets up a local Release instance with all the required services.
+
+Running the environment with this plugin is a three-step process:
+
+1. Start the Release Docker environment
+2. Build and publish the plugin
+3. Upload the demo templates
+
+When developing the plugin, typically you would just do step 2 after making code changes. 
+The new version of the plugin will be picked up without having to restart the server.
+
+
+### 1. Start the Release environment:
+
+The Release environment is defined in `dev-environment/docker-compose.yaml`.
+
+#### Stopping
+
+Have Docker running and launch the environment with:
 
 ```commandline
-cd dev-environment
-docker compose up -d --build
+docker compose -f dev-environment/docker-compose.yaml up -d --build 
 ```
 
-### 3. Build & publish the plugin
+It takes a while to start up. You can see that the Release server is running when the `digitalai-release-setup` container has terminated.
+
+Check if you can log in with `admin/admin` at http://localhost:5516.
+
+#### Stopping
+
+After the demo, you can stop the environment with:
+
+```commandline
+docker compose -f dev-environment/docker-compose.yaml down
+```
+
+
+### 2. Build & publish the plugin
+
+The `build.sh` script will build the plugin container, publish it to the local registry and install it to the local Release instance.
 
 Run the build script
 
@@ -46,9 +78,13 @@ sh build.sh --upload
 build.bat --upload
 ```
 
-### 3. Set up credentials
+### 3. Install example templates
 
-Put your API keys into [setup/secrets.xlvals](setup/secrets.xlvals).
+#### Set up credentials
+
+The sample templates come with examples to connect to various MCP servers and LLM providers.
+
+Put your API keys in [setup/secrets.xlvals](setup/secrets.xlvals).
 
 Use the example file as a base:
 
@@ -58,7 +94,7 @@ cp setup/secrets.xlvals.example setup/secrets.xlvals
 
 Then edit the file and add your keys.
 
-### 4. Upload demo templates
+#### Upload templates
 
 Run the following command to upload the demo templates to the local Release instance:
 
@@ -66,7 +102,11 @@ Run the following command to upload the demo templates to the local Release inst
 ./xlw apply -f setup/mcp-demo.yaml
 ```
 
-### Demo time!
+The templates will be uploaded to a new **AI Demo** folder.
+
+---
+
+## Demo time!
 
 1. Log in to http://localhost:5516 with admin/admin
 2. Go to the **AI Demo** folder

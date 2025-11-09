@@ -3,9 +3,9 @@ kind: Templates
 spec:
   - type: xlrelease.ThemeSettings
     id: Configuration/settings/ThemeSettings
-    headerName: SDK Environment
+    headerName: LLM integration (SDK)
     headerAccentColor: ORANGE
-    description: Instance for testing plugins build with the Integration SDK
+    description: Instance for testing the LLM integration plugin
     loginMessage: |-
       Welcome to the Digital.ai Release SDK Environment!
-      Use this server to test integrations plugins
+      Use this server to test the LLM integration plugin
