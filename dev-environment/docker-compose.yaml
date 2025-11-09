@@ -53,9 +53,3 @@ services:
       - CATALOG_ELEMENTS_LIMIT=1000
     depends_on:
       - container-registry
-
-  ticket-db:
-    build: ticket-db
-    command: [ "./spec", "mcp-backlog-server.spec.md" ]
-    ports:
-      - 8080:8080

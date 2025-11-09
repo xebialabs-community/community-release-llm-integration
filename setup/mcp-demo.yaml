@@ -6,11 +6,6 @@ metadata:
 spec:
 
   # MCP Servers
-  - name: Ticket MCP Server
-    type: mcp.Server
-    url: http://host.docker.internal:8080
-    transport: sse
-
   - name: Agility MCP Server
     type: mcp.Server
     url: https://api.staging.digital.ai/agilitymcp/v1/mcp
@@ -51,23 +46,6 @@ spec:
     model_id: anthropic.claude-sonnet-4-5-20250929-v1:0
 
   # Demo Templates
-  - template: MCP Ticket Sample
-    phases:
-      - phase: List tickets
-        tasks:
-          - name: Get tickets
-            type: mcp.CallTool
-            server: Ticket MCP Server
-            tool: list_tickets
-          - name: Get single ticket
-            type: mcp.CallTool
-            server: Ticket MCP Server
-            tool: get_ticket
-            input: |
-              {"id": "TICKET-001"}
-          - name: OK?
-            type: xlrelease.GateTask
-
   - template: MCP Agility Sample
     phases:
       - phase: MCP
@@ -106,9 +84,6 @@ spec:
     phases:
       - phase: List tools
         tasks:
-          - name: List Ticket tools
-            type: mcp.ListTools
-            server: Ticket MCP Server
           - name: List Release tools
             type: mcp.ListTools
             server: Release MCP Server
@@ -209,57 +184,10 @@ spec:
               Find the root cause of the last failed release and created a ticket to solve it
             model: Gemini 2.5 Flash
             mcpServer1: Release MCP Server
-            mcpServer2: Ticket MCP Server
+            mcpServer2: Agility MCP Server
           - name: OK?
             type: xlrelease.GateTask
             owner: admin
-
-  - template: Reorder tickets
-    phases:
-      - phase: Reorder backlog
-        tasks:
-          - name: Get tickets
-            type: mcp.CallTool
-            result: ${unordered}
-            server: Ticket MCP Server
-            tool: list_tickets
-          - name: Reorder by priority
-            type: ai.AgentPrompt
-            prompt: Find the highest priority tickets and move them to the  top of the backlog
-            model: Gemini 2.5 Pro
-            mcpServer1: Ticket MCP Server
-          - name: Get tickets again
-            type: mcp.CallTool
-            result: ${ordered}
-            server: Ticket MCP Server
-            tool: list_tickets
-          - name: OK?
-            type: xlrelease.GateTask
-            description: |-
-              ## Old order
-              
-              ```
-              ${unordered}
-              ```
-              
-              ## New order
-              
-              ```
-              ${ordered}
-              ```
-    variables:
-      - type: xlrelease.StringVariable
-        key: unordered
-        requiresValue: false
-        showOnReleaseStart: false
-        label: Result
-        description: Result
-      - type: xlrelease.StringVariable
-        key: ordered
-        requiresValue: false
-        showOnReleaseStart: false
-        label: Result
-        description: Result
 
 
   - template: Chat example
