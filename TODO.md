@@ -1,6 +1,5 @@
 * Cleanup demo templates
-* Remove initial prompt from chat task
-* Test with OpenAI
+* Screenshots in README
 * Support Anthropic
 * Better MCP server examples
   * GitHub?

@@ -34,16 +34,31 @@ spec:
     model_id: gemini-2.5-flash-lite
 
   - name: Amazon Nova Micro 1:0
-    type: community-llm.OpenAiModel
+    type: community-llm.DaiLlmModel
     url: https://api.staging.digital.ai/llm
     apiKey: !value DAI_LLM_API_KEY
     model_id: amazon.nova-micro-v1:0
 
   - name: Anthropic Sonnet 4.5
-    type: community-llm.OpenAiModel
+    type: community-llm.DaiLlmModel
     url: https://api.staging.digital.ai/llm
     apiKey: !value DAI_LLM_API_KEY
     model_id: anthropic.claude-sonnet-4-5-20250929-v1:0
+
+  - name: OpenAI GPT 5
+    type: community-llm.OpenAiModel
+    apiKey: !value OPENAI_API_KEY
+    model_id: gpt-5
+
+  - name: OpenAI GPT 5 mini
+    type: community-llm.OpenAiModel
+    apiKey: !value OPENAI_API_KEY
+    model_id: gpt-5-mini
+
+  - name: OpenAI GPT 5 nano
+    type: community-llm.OpenAiModel
+    apiKey: !value OPENAI_API_KEY
+    model_id: gpt-5-nano
 
   # Demo Templates
   - template: MCP Agility Sample
@@ -112,6 +127,10 @@ spec:
             type: community-llm.LlmPrompt
             prompt: Say hello in six languages, one for each continent
             model: Anthropic Sonnet 4.5
+          - name: Say hello (OpenAI)
+            type: community-llm.LlmPrompt
+            prompt: Say hello in six languages, one for each continent
+            model: OpenAI GPT 5 nano
           - name: OK?
             type: xlrelease.GateTask
             owner: admin

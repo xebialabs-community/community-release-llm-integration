@@ -36,7 +36,7 @@ class TestLlmAgent(unittest.TestCase):
         task.input_properties = {
             'prompt': 'Say hello in Spanish',
             'model': {
-                'provider': 'openai',
+                'provider': 'dai-llm',
                 'url': 'https://api.staging.digital.ai/llm',
                 'apiKey': os.getenv('DAI_LLM_API_KEY'),
                 'model_id': 'amazon.nova-micro-v1:0'

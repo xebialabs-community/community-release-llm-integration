@@ -44,6 +44,13 @@ def create_model(model):
             base_url=model['url'],
             api_key=model["apiKey"],
             model=model['model_id'],
+            temperature=0.0
+        )
+    if provider == 'dai-llm':
+        return ChatOpenAI(
+            base_url=model['url'],
+            api_key=model["apiKey"],
+            model=model['model_id'],
             default_headers={
                 'Authorization': f'Token {model["apiKey"]}',
                 'X-Digitalai-AppName': 'Release',

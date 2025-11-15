@@ -32,13 +32,35 @@ class TestLlmPrompt(unittest.TestCase):
         # Then
         self.assertIn('Hola', result)
 
-    def test_dai_llm_prompt(self):
+    def test_openai_prompt(self):
         # Given
         task = LlmPrompt()
         task.input_properties = {
             'prompt': 'Say hello in Spanish',
             'model': {
                 'provider': 'openai',
+                'url': 'https://api.openai.com/v1',
+                'apiKey': os.getenv('OPENAI_API_KEY'),
+                'model_id': 'gpt-5-nano'
+            },
+        }
+
+        # When
+        task.execute_task()
+
+        result = task.get_output_properties()['response']
+        print(result)
+
+        # Then
+        self.assertIn('Hola', result)
+
+    def test_dai_llm_prompt(self):
+        # Given
+        task = LlmPrompt()
+        task.input_properties = {
+            'prompt': 'Say hello in Spanish',
+            'model': {
+                'provider': 'dai-llm',
                 'url': 'https://api.staging.digital.ai/llm',
                 'apiKey': os.getenv('DAI_LLM_API_KEY'),
                 'model_id': 'amazon.nova-micro-v1:0'

@@ -191,7 +191,31 @@ types:
         label: API URL
         description: The URL to each the OpenAI API
         kind: string
-        default: https://api.openai.com/v1/chat/completions
+        default: https://api.openai.com/v1
+      apiKey:
+        label: API Key
+        description: API Key for the LLM provider
+        required: true
+        password: true
+      model_id:
+        label: Model
+        description: The model to use
+        kind: string
+
+  community-llm.DaiLlmModel:
+    extends: community-llm.BaseModel
+    label: "AI Model: Digital.ai LLM"
+
+    hidden-properties:
+      provider:
+        default: dai-llm
+
+    properties:
+      url:
+        label: API URL
+        description: The URL to each the Digital.ai LLM Service
+        kind: string
+        default: https://api.staging.digital.ai/llm
       apiKey:
         label: API Key
         description: API Key for the LLM provider
