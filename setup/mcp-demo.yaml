@@ -17,6 +17,12 @@ spec:
     type: community-llm.McpServer
     url: http://host.docker.internal:8000/mcp
 
+  - name: GitHub MCP Server
+    type: community-llm.McpServer
+    url: https://api.githubcopilot.com/mcp/
+    headers:
+        Authorization: !value GITHUB_TOKEN
+
     # AI Models
   - name: Gemini 2.5 Pro
     type: community-llm.GeminiModel
@@ -66,7 +72,7 @@ spec:
       - phase: MCP
         tasks:
           - name: List Agility tools
-            type: community-llm.McpListTools
+            type: community-llm.McpListToolsTask
             server: Agility MCP Server
           - name: Get current Agility user
             type: community-llm.McpCallTool
@@ -81,7 +87,7 @@ spec:
       - phase: List releases
         tasks:
           - name: List Release tools
-            type: community-llm.McpListTools
+            type: community-llm.McpListToolsTask
             server: Release MCP Server
           - name: Get releases
             type: community-llm.McpCallTool
@@ -100,10 +106,10 @@ spec:
       - phase: List tools
         tasks:
           - name: List Release tools
-            type: community-llm.McpListTools
+            type: community-llm.McpListToolsTask
             server: Release MCP Server
           - name: List Agility Tools
-            type: community-llm.McpListTools
+            type: community-llm.McpListToolsTask
             server: Agility MCP Server
           - name: OK?
             type: xlrelease.GateTask
@@ -200,10 +206,12 @@ spec:
           - name: Fix last failed release
             type: community-llm.LlmAgent
             prompt: |
-              Find the root cause of the last failed release and created a ticket to solve it
+              Create a GitHub issue to fix the last failed release in xebialabs-community/community-release-llm-integration repo. 
+              
+              Cause: Jenkins ran out of space
+              Root cause: Builds take too long
             model: Gemini 2.5 Flash
-            mcpServer1: Release MCP Server
-            mcpServer2: Agility MCP Server
+            mcpServer1: GitHub MCP Server
           - name: OK?
             type: xlrelease.GateTask
             owner: admin
@@ -221,3 +229,36 @@ spec:
             owner: admin
     scriptUsername: admin
     scriptUserPassword: admin
+
+  - template: Read GitHub issue
+    phases:
+    - phase: Read issue
+      tasks:
+      - name: Read sample issue
+        type: community-llm.McpCallTool
+        server: GitHub MCP Server
+        tool: issue_read
+        input: |-
+          {
+          "issue_number": 1,
+          "method": "get",
+          "owner": "xebialabs-community",
+          "repo": "community-release-llm-integration"
+          }
+        result: ${issue}
+      - name: Check issue
+        type: xlrelease.GateTask
+        description: |-
+          # Issue found
+  
+          ```
+          ${issue}
+          ```
+      color: "#3d6c9e"
+    variables:
+    - type: xlrelease.StringVariable
+      key: issue
+      requiresValue: false
+      showOnReleaseStart: false
+      label: Issue
+      description: The issue json from GitHub

@@ -1,6 +1,6 @@
 import unittest
 
-from src.mcp_list_tools import McpListTools
+from src.mcp_list_tools import McpListToolsTask
 
 
 class TestMcpListTools(unittest.TestCase):
@@ -8,7 +8,7 @@ class TestMcpListTools(unittest.TestCase):
     @unittest.skip("No MCP server avilable for testing")
     def test_list_tools(self):
         # Given
-        task = McpListTools()
+        task = McpListToolsTask()
         task.input_properties = {
             'server': {
                 'url': 'http://localhost:8080/',

@@ -8,7 +8,7 @@ from mcp.types import Tool
 from src.mcp_call_tool import create_transport
 
 
-class McpListTools(BaseTask):
+class McpListToolsTask(BaseTask):
 
     def execute(self) -> None:
         # Process input
@@ -51,18 +51,8 @@ def convert_dict_to_pretty_json(input_dict):
 
 def create_tool_report(output):
     # Build a Markdown text
-    # Header: ## Available Tools
-    # Then for each tool:
-    # ### Tool Name
-    # Tool Description
-    # #### Input schema
-    # Json formatted input schema (as code block)
     report = "## Available Tools\n\n"
     for tool in output:
         report += f"### {tool.name}\n"
         report += f"{tool.description}\n\n"
-        report += f"#### Input schema\n"
-        report += "```json\n"
-        report += convert_dict_to_pretty_json(tool.inputSchema)
-        report += "\n```\n\n"
     return report
