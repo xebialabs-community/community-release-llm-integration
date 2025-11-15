@@ -3,8 +3,9 @@ import unittest
 from src.mcp_list_tools import McpListTools
 
 
-class TestListTools(unittest.TestCase):
+class TestMcpListTools(unittest.TestCase):
 
+    @unittest.skip("No MCP server avilable for testing")
     def test_list_tools(self):
         # Given
         task = McpListTools()

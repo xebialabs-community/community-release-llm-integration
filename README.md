@@ -1,10 +1,13 @@
-# MCP Client tasks for Digital.ai Release
+# AI tasks for Digital.ai Release
 
-AI demo tasks for Release
+Tasks for Release to interact with LLMs and MCP servers.
 
-* **MCP**: Connect to any MCP server and invoke its tools
-* **AI prompt**: Connect to an AI server and invoke a prompt. Support Gemini and OpenAI-compatible providers
-* **Agent prompt**. Combines the MCP and AI prompt tasks to create an agent that can use tools
+* **MCP: Call Tool**: Connect to any MCP server and invoke its tools
+* **MCP: List Tools**: Lists available tools on the MCP server
+
+* **AI: Prompt**: Connect to an AI server and invoke a prompt. Support Gemini and OpenAI-compatible providers
+* **AI: Agent**. Combines the MCP and AI prompt tasks to create an agent that can use tools
+* **AI: Chat**. Interactive chat with an LLM, inside the task's Activity section.
 
 ## Prerequisites
 
@@ -114,3 +117,20 @@ The templates will be uploaded to a new **AI Demo** folder.
 
 👉Add your favorite MCP Server or LLM provider under Connections and build your own example!
 
+---
+## Developing
+
+### Run the tests
+
+The tests are integration tests and need API keys to run. Put your API keys in `.env` file in the root of the project:
+
+```
+AGILITY_KEY=<key>
+GEMINI_API_KEY=<key>
+DAI_LLM_API_KEY=<key>
+```
+
+Run the tests with the command
+
+```commandline
+```

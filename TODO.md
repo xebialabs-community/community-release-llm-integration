@@ -1,8 +1,7 @@
-* Rename types
 * Cleanup demo templates
-  * Start demo releases from yaml!
 * Remove initial prompt from chat task
 * Support Digital.ai LLM service
+* Test with OpenAI
 * Support Anthropic
 * Better MCP server examples
   * GitHub?

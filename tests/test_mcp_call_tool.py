@@ -3,8 +3,9 @@ import unittest
 from src.mcp_call_tool import McpCallTool
 
 
-class TestCallTool(unittest.TestCase):
+class TestMcpCallTool(unittest.TestCase):
 
+    @unittest.skip("No MCP server avilable for testing")
     def test_call_tool(self):
         # Given
         task = McpCallTool()
@@ -27,6 +28,7 @@ class TestCallTool(unittest.TestCase):
         # Check if result contains 'TICKET'
         self.assertIn('TICKET', result)
 
+    @unittest.skip("No MCP server avilable for testing")
     def test_call_tool_with_input(self):
         # Given
         task = McpCallTool()

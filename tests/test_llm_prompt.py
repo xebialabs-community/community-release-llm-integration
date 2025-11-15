@@ -11,7 +11,7 @@ class TestLlmPrompt(unittest.TestCase):
     def setUpClass(cls):
         load_dotenv()
 
-    def test_prompt_in_gemini(self):
+    def test_gemini_prompt(self):
         # Given
         task = LlmPrompt()
         task.input_properties = {
@@ -32,7 +32,7 @@ class TestLlmPrompt(unittest.TestCase):
         # Then
         self.assertIn('Hola', result)
 
-    def test_prompt_in_digitalai(self):
+    def test_dai_llm_prompt(self):
         # Given
         task = LlmPrompt()
         task.input_properties = {

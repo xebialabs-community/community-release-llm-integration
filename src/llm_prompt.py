@@ -44,7 +44,10 @@ def create_model(model):
             base_url=model['url'],
             api_key=model["apiKey"],
             model=model['model_id'],
-            default_headers={'Authorization': f'Token {model["apiKey"]}'},
+            default_headers={
+                'Authorization': f'Token {model["apiKey"]}',
+                'X-Digitalai-AppName': 'Release',
+            },
             temperature=0.0
         )
     raise ValueError(f"Provider {provider} is not supported")
