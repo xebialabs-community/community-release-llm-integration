@@ -1,6 +1,5 @@
 * Cleanup demo templates
 * Remove initial prompt from chat task
-* Support Digital.ai LLM service
 * Test with OpenAI
 * Support Anthropic
 * Better MCP server examples

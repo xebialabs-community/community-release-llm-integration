@@ -196,7 +196,6 @@ spec:
         tasks:
           - name: Chat with agent
             type: community-llm.LlmChat
-            prompt: "Say hello in six languages, one for each continent"
             model: Amazon Nova Micro 1:0
           - name: OK?
             type: xlrelease.GateTask

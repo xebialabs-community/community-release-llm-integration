@@ -242,10 +242,6 @@ types:
     description: Chats with the LLM. Send 'Stop chat' to end the chat.
 
     input-properties:
-      prompt:
-        description: The prompt to be answered by the AI model
-        kind: string
-        size: large
       model:
         description: The LLM model to use
         kind: ci
