@@ -15,9 +15,11 @@ types:
 
   # MCP Server
 
-  mcp.Server:
+  community-llm.McpServer:
     extends: configuration.ContainerHttpConnection
-
+    label: "MCP: Server"
+    description: MCP Server configuration
+    
     properties:
       url:
         description: The target MCP Server URL
@@ -36,11 +38,11 @@ types:
         required: false
 
     hidden-properties:
-      testConnectionScript: mcp.TestConnection
+      testConnectionScript: community-llm.McpTestConnection
 
   # MCP tasks
 
-  mcp.BaseTask:
+  community-llm.McpBaseTask:
     extends: xlrelease.ContainerTask
     virtual: true
 
@@ -55,10 +57,11 @@ types:
       server:
         description: The MCP server
         kind: ci
-        referenced-type: mcp.Server
+        referenced-type: community-llm.McpServer
 
-  mcp.CallTool:
-    extends: mcp.BaseTask
+  community-llm.McpCallTool:
+    extends: community-llm.McpBaseTask
+    label: "MCP: Call Tool"
     description: Calls an MCP tool
 
     input-properties:
@@ -81,11 +84,12 @@ types:
     methods:
       tool-lookup:
         delegate: remoteScriptLookup
-        script: mcp.ToolLookupScript
+        script: community-llm.McpToolLookupScript
         containerConnection: server
 
-  mcp.ListTools:
-    extends: mcp.BaseTask
+  community-llm.McpListTools:
+    extends: community-llm.McpBaseTask
+    label: "MCP: List Tools"
     description: Lists available tools on the MCP server
 
     output-properties:
@@ -101,7 +105,7 @@ types:
 
   # MCP Scripts
 
-  mcp.BaseScript:
+  community-llm.McpBaseScript:
     extends: xlrelease.RemoteScriptExecution
     virtual: true
 
@@ -114,21 +118,21 @@ types:
       commandResponse:
         kind: map_string_string
 
-  mcp.TestConnection:
-    extends: mcp.BaseScript
+  community-llm.McpTestConnection:
+    extends: community-llm.McpBaseScript
 
     input-properties:
       server:
         kind: ci
-        referenced-type: mcp.Server
+        referenced-type: community-llm.McpServer
 
-  mcp.ToolLookupScript:
-    extends: mcp.BaseScript
+  community-llm.McpToolLookupScript:
+    extends: community-llm.McpBaseScript
 
     input-properties:
       _ci:
         kind: ci
-        referenced-type: mcp.BaseTask
+        referenced-type: community-llm.McpBaseTask
       _attributes:
         kind: map_string_string
       _parameters:
@@ -139,7 +143,7 @@ types:
   # AI Models
   #
 
-  ai.Model:
+  community-llm.BaseModel:
     extends: xlrelease.Configuration
     virtual: true
 
@@ -154,8 +158,9 @@ types:
         description: The model to use
         kind: string
 
-  ai.GeminiModel:
-    extends: ai.Model
+  community-llm.GeminiModel:
+    extends: community-llm.BaseModel
+    label: "AI Model: Gemini"
 
     hidden-properties:
       provider:
@@ -173,8 +178,9 @@ types:
         kind: string
         default: gemini-2.5-flash
 
-  ai.OpenAiModel:
-    extends: ai.Model
+  community-llm.OpenAiModel:
+    extends: community-llm.BaseModel
+    label: "AI Model: OpenAI"
 
     hidden-properties:
       provider:
@@ -197,10 +203,10 @@ types:
         kind: string
 
   #
-  # Prompts
+  # LLM tasks
   #
 
-  ai.BasePrompt:
+  community-llm.BasePrompt:
     extends: xlrelease.ContainerTask
 
     hidden-properties:
@@ -210,10 +216,10 @@ types:
       iconLocation: gemini.png
       taskColor: "#C88BFF"
 
-  ai.LlmPrompt:
-    extends: ai.BasePrompt
+  community-llm.LlmPrompt:
+    extends: community-llm.BasePrompt
     label: "AI: Prompt"
-    description: Sends a prompt to an LLM service
+    description: Sends a single prompt to an LLM service
 
     input-properties:
       prompt:
@@ -221,17 +227,17 @@ types:
         kind: string
         size: large
       model:
-        description: The LLM model to use
+        description: The reasoning model to use
         kind: ci
-        referenced-type: ai.Model
+        referenced-type: community-llm.BaseModel
 
     output-properties:
       response:
         description: The AI response
         kind: string
 
-  ai.LlmChat:
-    extends: ai.BasePrompt
+  community-llm.LlmChat:
+    extends: community-llm.BasePrompt
     label: "AI: Chat"
     description: Chats with the LLM. Send 'Stop chat' to end the chat.
 
@@ -243,21 +249,18 @@ types:
       model:
         description: The LLM model to use
         kind: ci
-        referenced-type: ai.Model
+        referenced-type: community-llm.BaseModel
 
     output-properties:
       response:
         description: The AI response
         kind: string
 
-  #
-  # Langchain
-  #
 
-  ai.AgentPrompt:
+  community-llm.LlmAgent:
     extends: xlrelease.ContainerTask
-    label: "AI: Agent prompt"
-    description: Prompts an AI agent to do something with the help of multiple MCP servers.
+    label: "AI: Agent"
+    description: Asks AI agent to do something with multiple MCP server support.
 
     hidden-properties:
       image:
@@ -272,24 +275,24 @@ types:
         kind: string
         size: large
       model:
-        description: The LLM model to use
+        description: The reasoning model to use
         kind: ci
-        referenced-type: ai.Model
+        referenced-type: community-llm.BaseModel
       mcpServer1:
         label: MCP Server 1
         description: An MCP server that can be used by the agent
         kind: ci
-        referenced-type: mcp.Server
+        referenced-type: community-llm.McpServer
       mcpServer2:
         label: MCP Server 2
         description: An MCP server that can be used by the agent
         kind: ci
-        referenced-type: mcp.Server
+        referenced-type: community-llm.McpServer
       mcpServer3:
         label: MCP Server 3
         description: An MCP server that can be used by the agent
         kind: ci
-        referenced-type: mcp.Server
+        referenced-type: community-llm.McpServer
 
     output-properties:
       result:

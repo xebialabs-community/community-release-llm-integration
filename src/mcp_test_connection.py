@@ -3,10 +3,10 @@ import asyncio
 from digitalai.release.integration import BaseTask
 from fastmcp import Client
 
-from src.call_tool import create_transport
+from src.mcp_call_tool import create_transport
 
 
-class TestConnection(BaseTask):
+class McpTestConnection(BaseTask):
     """
         Testing connection to the remote server
     """

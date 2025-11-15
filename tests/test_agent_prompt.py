@@ -1,7 +1,7 @@
 import os
 import unittest
 from dotenv import load_dotenv
-from src.agent_prompt import AgentPrompt
+from src.llm_agent import LlmAgent
 
 
 class TestAgentPrompt(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestAgentPrompt(unittest.TestCase):
 
     def test_agent_prompt_echo(self):
         # Given
-        task = AgentPrompt()
+        task = LlmAgent()
         task.input_properties = {
             'prompt': 'Say hello in Spanish',
             'model': {
@@ -32,7 +32,7 @@ class TestAgentPrompt(unittest.TestCase):
 
     def test_agent_prompt_with_digital_ai(self):
         # Given
-        task = AgentPrompt()
+        task = LlmAgent()
         task.input_properties = {
             'prompt': 'Say hello in Spanish',
             'model': {
@@ -54,7 +54,7 @@ class TestAgentPrompt(unittest.TestCase):
     @unittest.skip("Release token expired")
     def test_with_release_mcp(self):
         # Given
-        task = AgentPrompt()
+        task = LlmAgent()
         task.input_properties = {
             'prompt': 'What is the latest failed release',
             'model': {
@@ -79,7 +79,7 @@ class TestAgentPrompt(unittest.TestCase):
 
     def test_ticket_reorder_mcp(self):
         # Given
-        task = AgentPrompt()
+        task = LlmAgent()
         task.input_properties = {
             'prompt': """Write a Python script that will find the highest priority tickets and move 
               them to the top of the backlog. Assume that the script can call an MCP tool with 

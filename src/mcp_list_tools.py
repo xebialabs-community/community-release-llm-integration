@@ -5,10 +5,10 @@ from fastmcp import Client
 import json
 from mcp.types import Tool
 
-from src.call_tool import create_transport
+from src.mcp_call_tool import create_transport
 
 
-class ListTools(BaseTask):
+class McpListTools(BaseTask):
 
     def execute(self) -> None:
         # Process input

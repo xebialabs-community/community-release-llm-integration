@@ -7,40 +7,40 @@ spec:
 
   # MCP Servers
   - name: Agility MCP Server
-    type: mcp.Server
+    type: community-llm.McpServer
     url: https://api.staging.digital.ai/agilitymcp/v1/mcp
     headers:
       X-Agility-Bearer: !value AGILITY_KEY
       X-Agility-Host: https://www7.v1host.com/V1Production
 
   - name: Release MCP Server
-    type: mcp.Server
+    type: community-llm.McpServer
     url: http://host.docker.internal:8000/mcp
 
     # AI Models
   - name: Gemini 2.5 Pro
-    type: ai.GeminiModel
+    type: community-llm.GeminiModel
     apiKey: !value GEMINI_API_KEY
     model_id: gemini-2.5-pro
 
   - name: Gemini 2.5 Flash
-    type: ai.GeminiModel
+    type: community-llm.GeminiModel
     apiKey: !value GEMINI_API_KEY
     model_id: gemini-2.5-flash
 
   - name: Gemini 2.5 Flash-Lite
-    type: ai.GeminiModel
+    type: community-llm.GeminiModel
     apiKey: !value GEMINI_API_KEY
     model_id: gemini-2.5-flash-lite
 
   - name: Amazon Nova Micro 1:0
-    type: ai.OpenAiModel
+    type: community-llm.OpenAiModel
     url: https://api.staging.digital.ai/llm
     apiKey: !value DAI_LLM_API_KEY
     model_id: amazon.nova-micro-v1:0
 
   - name: Anthropic Sonnet 4.5
-    type: ai.OpenAiModel
+    type: community-llm.OpenAiModel
     url: https://api.staging.digital.ai/llm
     apiKey: !value DAI_LLM_API_KEY
     model_id: anthropic.claude-sonnet-4-5-20250929-v1:0
@@ -51,10 +51,10 @@ spec:
       - phase: MCP
         tasks:
           - name: List Agility tools
-            type: mcp.ListTools
+            type: community-llm.McpListTools
             server: Agility MCP Server
           - name: Get current Agility user
-            type: mcp.CallTool
+            type: community-llm.McpCallTool
             server: Agility MCP Server
             tool: get_current_user
           - name: OK?
@@ -66,10 +66,10 @@ spec:
       - phase: List releases
         tasks:
           - name: List Release tools
-            type: mcp.ListTools
+            type: community-llm.McpListTools
             server: Release MCP Server
           - name: Get releases
-            type: mcp.CallTool
+            type: community-llm.McpCallTool
             server: Release MCP Server
             tool: list_releases
             input: |
@@ -85,10 +85,10 @@ spec:
       - phase: List tools
         tasks:
           - name: List Release tools
-            type: mcp.ListTools
+            type: community-llm.McpListTools
             server: Release MCP Server
           - name: List Agility Tools
-            type: mcp.ListTools
+            type: community-llm.McpListTools
             server: Agility MCP Server
           - name: OK?
             type: xlrelease.GateTask
@@ -96,20 +96,20 @@ spec:
 
   # Prompt examples
 
-  - template: Prompt example
+  - template: 2. Prompt example
     phases:
       - phase: Prompt
         tasks:
           - name: Say hello (Gemini)
-            type: ai.LlmPrompt
+            type: community-llm.LlmPrompt
             prompt: Say hello in six languages, one for each continent
             model: Gemini 2.5 Flash-Lite
           - name: Say hello (Amazon Nova)
-            type: ai.LlmPrompt
+            type: community-llm.LlmPrompt
             prompt: Say hello in six languages, one for each continent
             model: Amazon Nova Micro 1:0
           - name: Say hello (Anthropic)
-            type: ai.LlmPrompt
+            type: community-llm.LlmPrompt
             prompt: Say hello in six languages, one for each continent
             model: Anthropic Sonnet 4.5
           - name: OK?
@@ -117,18 +117,18 @@ spec:
             owner: admin
 
   # Full example
-  - template: Agility summarize user
+  - template: 1. Agility summarize user
     phases:
       - phase: User details
         tasks:
           - name: Get current Agility user
-            type: mcp.CallTool
+            type: community-llm.McpCallTool
             variableMapping:
               result: "${user}"
             server: Agility MCP Server
             tool: get_current_user
           - name: Get name
-            type: ai.LlmPrompt
+            type: community-llm.LlmPrompt
             variableMapping:
               response: "${name}"
             model: Gemini 2.5 Flash
@@ -139,7 +139,7 @@ spec:
               ${user}
               ```
           - name: Get summary
-            type: ai.LlmPrompt
+            type: community-llm.LlmPrompt
             variableMapping:
               response: "${summary}"
             model: Gemini 2.5 Flash
@@ -174,12 +174,12 @@ spec:
 
   # Langchain example
 
-  - template: Release Agent demo
+  - template: 3. Release Agent demo
     phases:
       - phase: Report
         tasks:
           - name: Fix last failed release
-            type: ai.AgentPrompt
+            type: community-llm.LlmAgent
             prompt: |
               Find the root cause of the last failed release and created a ticket to solve it
             model: Gemini 2.5 Flash
@@ -190,12 +190,12 @@ spec:
             owner: admin
 
 
-  - template: Chat example
+  - template: 4. Chat example
     phases:
       - phase: Prompt
         tasks:
           - name: Chat with agent
-            type: ai.LlmChat
+            type: community-llm.LlmChat
             prompt: "Say hello in six languages, one for each continent"
             model: Amazon Nova Micro 1:0
           - name: OK?

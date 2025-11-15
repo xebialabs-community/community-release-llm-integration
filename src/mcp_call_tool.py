@@ -8,7 +8,7 @@ import json
 from mcp.types import TextContent
 
 
-class CallTool(BaseTask):
+class McpCallTool(BaseTask):
 
     def execute(self) -> None:
         # Process input

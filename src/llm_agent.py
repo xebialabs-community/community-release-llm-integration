@@ -9,7 +9,7 @@ from langgraph.prebuilt import create_react_agent
 from src.llm_prompt import create_model
 
 
-class AgentPrompt(BaseTask):
+class LlmAgent(BaseTask):
 
     def execute(self) -> None:
         # Get input

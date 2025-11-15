@@ -1,13 +1,13 @@
 import unittest
 
-from src.list_tools import ListTools
+from src.mcp_list_tools import McpListTools
 
 
 class TestListTools(unittest.TestCase):
 
     def test_list_tools(self):
         # Given
-        task = ListTools()
+        task = McpListTools()
         task.input_properties = {
             'server': {
                 'url': 'http://localhost:8080/',

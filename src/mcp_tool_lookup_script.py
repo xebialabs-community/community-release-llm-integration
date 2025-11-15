@@ -3,11 +3,11 @@ import asyncio
 from digitalai.release.integration import BaseTask
 from fastmcp import Client
 
-from src.call_tool import create_transport
-from src.list_tools import list_tools
+from src.mcp_call_tool import create_transport
+from src.mcp_list_tools import list_tools
 
 
-class ToolLookupScript(BaseTask):
+class McpToolLookupScript(BaseTask):
     """
         Testing connection to the remote server
     """

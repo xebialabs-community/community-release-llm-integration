@@ -1,13 +1,13 @@
 import unittest
 
-from src.call_tool import CallTool
+from src.mcp_call_tool import McpCallTool
 
 
 class TestCallTool(unittest.TestCase):
 
     def test_call_tool(self):
         # Given
-        task = CallTool()
+        task = McpCallTool()
         task.input_properties = {
             'server': {
                 'url': 'http://localhost:8080/',
@@ -29,7 +29,7 @@ class TestCallTool(unittest.TestCase):
 
     def test_call_tool_with_input(self):
         # Given
-        task = CallTool()
+        task = McpCallTool()
         task.input_properties = {
             'server': {
                 'url': 'http://localhost:8080/',
