@@ -1,6 +1,6 @@
 # AI tasks for Digital.ai Release
 
-Create AI-powered automation workflows in Release.
+Create AI-powered automation workflows in Release!
 
 This integration provides tasks for Release to interact with LLMs like OpenAI and Gemini and interact with any MCP servers.
 
@@ -31,7 +31,6 @@ Lists available tools on an MCP server
 Connect to an AI server and invoke a single prompt. Supports Gemini and OpenAI-compatible LLM providers.
 
 ![AI Prompt Task](setup/images/prompt-task-say-hello.png)
-
 
 ### AI: Agent
 

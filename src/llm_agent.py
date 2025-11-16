@@ -6,7 +6,7 @@ from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt import create_react_agent
 
-from src.llm_prompt import create_model
+from src.llm_prompt import create_model, markdown_quote
 
 
 class LlmAgent(BaseTask):
@@ -60,7 +60,7 @@ def create_markdown_report(output):
     markdown = ''
     for message in output['messages']:
         if isinstance(message, HumanMessage):
-            markdown += f"_{message.content}_\n\n"
+            markdown += markdown_quote(message.content)
         if isinstance(message, AIMessage):
             if message.content:
                 markdown += f"{message.content}\n\n"

@@ -6,7 +6,7 @@ from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableWithMessageHistory
 
-from src.llm_prompt import create_model
+from src.llm_prompt import create_model, markdown_quote
 
 # In-memory session store
 _session_store: Dict[str, InMemoryChatMessageHistory] = {}
@@ -61,7 +61,7 @@ class LlmChat(BaseTask):
             )
 
             # Send response to UI
-            comment = f"_{prompt}_\n\n{agent_response.content}"
+            comment = agent_response.content
             answer_count += 1
             answer_marker = self.add_comment_with_marker(comment, answer_count)
 

@@ -18,13 +18,14 @@ class LlmPrompt(BaseTask):
         response = output.content
 
         # Send comment to the task UI
-        comment = f"_{prompt}_\n\n"
+        comment = markdown_quote(prompt)
         comment += response
         self.add_comment(comment)
         self.set_status_line("")
 
         # Set output
         self.set_output_property('response', response)
+
 
 
 def create_model(model):
@@ -58,3 +59,10 @@ def create_model(model):
             temperature=0.0
         )
     raise ValueError(f"Provider {provider} is not supported")
+
+
+def markdown_quote(text: str) -> str:
+    """Wrap a multiline string into markdown quote format."""
+    lines = text.split('\n')
+    quoted_lines = [f"> {line}" for line in lines]
+    return '\n'.join(quoted_lines) + '\n\n'
