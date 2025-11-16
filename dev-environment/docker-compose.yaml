@@ -28,6 +28,20 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp:/tmp
 
+  digitalai-release-mcp:
+    image: xebialabsunsupported/dai-release-mcp:main
+    depends_on:
+      - digitalai-release-setup
+    ports:
+      - 8000:8000
+    environment:
+      - MCP_TRANSPORT=http
+      - MCP_PORT=8000
+      - RELEASE_BASE_URL=http://digitalai-release:5516
+      - RELEASE_AUTH_TYPE=basic
+      - RELEASE_USERNAME=admin
+      - RELEASE_PASSWORD=admin
+
   container-registry:
     image: registry:2
     ports:

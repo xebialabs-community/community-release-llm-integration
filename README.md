@@ -22,6 +22,7 @@ project:
 Add the following to `/etc/hosts` or `C:\Windows\System32\drivers\etc\hosts` (sudo / administrator permissions
 required):
 
+    127.0.0.1 host.docker.internal
     127.0.0.1 container-registry
 
 ## Start the development environment
