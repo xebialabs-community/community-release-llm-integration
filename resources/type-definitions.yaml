@@ -237,7 +237,7 @@ types:
       image:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
-      iconLocation: gemini.png
+      iconLocation: prompt.png
       taskColor: "#C88BFF"
 
   community-llm.LlmPrompt:

@@ -1,13 +1,52 @@
 # AI tasks for Digital.ai Release
 
-Tasks for Release to interact with LLMs and MCP servers.
+Create AI-powered automation workflows in Release.
 
-* **MCP: Call Tool**: Connect to any MCP server and invoke its tools
-* **MCP: List Tools**: Lists available tools on the MCP server
+This integration provides tasks for Release to interact with LLMs like OpenAI and Gemini and interact with any MCP servers.
 
-* **AI: Prompt**: Connect to an AI server and invoke a prompt. Support Gemini and OpenAI-compatible providers
-* **AI: Agent**. Combines the MCP and AI prompt tasks to create an agent that can use tools
-* **AI: Chat**. Interactive chat with an LLM, inside the task's Activity section.
+* Create AI agents that perform complex tasks using MCP tools
+* Call services directly using MCP, without writing any code
+* Embed AI prompts in your Release workflows
+* Start interactive chats with the LLM of your choice
+* Connect to Gemini and OpenAI-compatible providers
+* Connect to any MCP server
+* Mix and match MCP servers and reasoning models per task, to get the right tool for the job
+
+## Tasks
+
+### MCP: Call tool
+
+Connect to any MCP server and invoke its tools.
+
+![MCP Call Tool Task](setup/images/mcp-task-read-github-issue.png)
+
+### MCP: List Tools
+
+Lists available tools on an MCP server
+
+![MCP List Tool Task](setup/images/mcp-task-list-release-tools.png)
+
+### AI: Prompt
+
+Connect to an AI server and invoke a single prompt. Supports Gemini and OpenAI-compatible LLM providers.
+
+![AI Prompt Task](setup/images/prompt-task-say-hello.png)
+
+
+### AI: Agent
+
+Creates an AI agent that can use MCP tools to accomplish tasks.
+
+![AI Agent Task](setup/images/agent-task-report-failed-releases.png)
+
+### AI: Chat
+
+Interactive chat with an LLM, inside the task's Activity section.
+
+![AI Chat Task](setup/images/chat-task.png)
+
+---
+# Build & Run
 
 ## Prerequisites
 
@@ -126,8 +165,8 @@ The templates will be uploaded to a new **AI Demo** folder.
 The tests are integration tests and need API keys to run. Put your API keys in `.env` file in the root of the project:
 
 ```
-AGILITY_KEY=<key>
 GEMINI_API_KEY=<key>
+OPENAI_API_KEY=<key>
 DAI_LLM_API_KEY=<key>
 ```
 

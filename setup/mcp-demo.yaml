@@ -262,3 +262,53 @@ spec:
       showOnReleaseStart: false
       label: Issue
       description: The issue json from GitHub
+  - template: Tasks for README screenshots
+    variables:
+      - type: xlrelease.StringVariable
+        key: issue
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Issue
+        description: The issue json from GitHub
+    scriptUsername: admin
+    scriptUserPassword: admin
+    phases:
+      - phase: Examples
+        tasks:
+          - name: Read GitHub issue
+            type: community-llm.McpCallTool
+            description: Read issue number `1` from GitHub repo **community-release-llm-integration**
+            result: ${issue}
+            server: GitHub MCP Server
+            tool: issue_read
+            input: |-
+              {
+              "issue_number": 1,
+              "method": "get",
+              "owner": "xebialabs-community",
+              "repo": "community-release-llm-integration"
+              }
+          - name: List Release MCP tools
+            type: community-llm.McpListToolsTask
+            description: Lists all MCP tools for this Release server
+            capabilities:
+              - remote
+            server: Release MCP Server
+          - name: Say hello
+            type: community-llm.LlmPrompt
+            prompt: Say hello in 6 languages for 6 continents
+            model: Amazon Nova Micro 1:0
+          - name: Report failed releases
+            type: community-llm.LlmAgent
+            description: Use an agent to automate your workflow
+            prompt: |-
+              Create a ticket for each failed release.
+              
+              Use the issue list in xebialabs-community/community-release-llm-integration
+            model: Anthropic Sonnet 4.5
+            mcpServer1: Release MCP Server
+            mcpServer2: GitHub MCP Server
+          - name: Interactive chat
+            type: community-llm.LlmChat
+            model: Gemini 2.5 Flash
+        color: "#3d6c9e"
