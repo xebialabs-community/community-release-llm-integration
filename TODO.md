@@ -1,8 +1,8 @@
-* Cleanup demo templates
 * Create better examples
-
-* Add example of a task that uses MCP under the hood and defines properties in type-definitions.yaml
 * Add interactive support to Agent task
+* Add system prompt to LLM connection
+* 
+* Add example of a task that uses MCP under the hood and defines properties in type-definitions.yaml
 * Better Agility MCP server
 * Support Anthropic
 * Add MCP server to interactive chat

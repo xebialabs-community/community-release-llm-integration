@@ -14,9 +14,27 @@ This integration provides tasks for Release to interact with LLMs like OpenAI an
 
 ## Tasks
 
+### AI: Agent
+
+Creates an AI agent that can use MCP tools to accomplish tasks.
+
+![AI Agent Task](setup/images/agent-task-report-failed-releases.png)
+
+### AI: Prompt
+
+Connect to an AI server and invoke a single prompt. Supports Gemini and OpenAI-compatible LLM providers.
+
+![AI Prompt Task](setup/images/prompt-task-say-hello.png)
+
+### AI: Chat
+
+Interactive chat with an LLM, inside the task's Activity section.
+
+![AI Chat Task](setup/images/chat-task.png)
+
 ### MCP: Call tool
 
-Connect to any MCP server and invoke its tools.
+Connect to any MCP server and invoke its tools. No LLM reasoning, just direct tool calls.
 
 ![MCP Call Tool Task](setup/images/mcp-task-read-github-issue.png)
 
@@ -26,23 +44,6 @@ Lists available tools on an MCP server
 
 ![MCP List Tool Task](setup/images/mcp-task-list-release-tools.png)
 
-### AI: Prompt
-
-Connect to an AI server and invoke a single prompt. Supports Gemini and OpenAI-compatible LLM providers.
-
-![AI Prompt Task](setup/images/prompt-task-say-hello.png)
-
-### AI: Agent
-
-Creates an AI agent that can use MCP tools to accomplish tasks.
-
-![AI Agent Task](setup/images/agent-task-report-failed-releases.png)
-
-### AI: Chat
-
-Interactive chat with an LLM, inside the task's Activity section.
-
-![AI Chat Task](setup/images/chat-task.png)
 
 ---
 # Build & Run

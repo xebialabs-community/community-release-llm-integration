@@ -3,8 +3,8 @@ import asyncio
 from digitalai.release.integration import BaseTask
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
+from langchain.agents import create_agent
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph.prebuilt import create_react_agent
 
 from src.llm_prompt import create_model, markdown_quote
 
@@ -45,7 +45,7 @@ async def send_prompt(prompt, model, mcp_servers):
     client = MultiServerMCPClient(mcp_servers)
     tools = await client.get_tools()
 
-    agent = create_react_agent(model=model, tools=tools)
+    agent = create_agent(model=model, tools=tools, system_prompt="You are an AI assistant in the DevOps domain and are running inside the Digital.ai Release product as a task.")
 
     response = await agent.ainvoke({"messages": prompt})
 
@@ -63,7 +63,7 @@ def create_markdown_report(output):
             markdown += markdown_quote(message.content)
         if isinstance(message, AIMessage):
             if message.content:
-                markdown += f"{message.content}\n\n"
+                markdown += f"{message.text}\n\n"
         if isinstance(message, ToolMessage):
             success = message.status == 'success'
             status = "✅" if success else "❌"
