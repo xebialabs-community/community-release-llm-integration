@@ -40,12 +40,19 @@ class LlmAgent(BaseTask):
         result = last_agent_message(output)
         self.set_output_property('result', result)
 
+        if '🙋🏻' in result:
+            raise Exception("Could not complete the task because the agent needs more information.")
+
 
 async def send_prompt(prompt, model, mcp_servers):
     client = MultiServerMCPClient(mcp_servers)
     tools = await client.get_tools()
+    system_prompt = """
+    You are an AI assistant in the DevOps domain and are running inside the Digital.ai Release product as a task.
+    If you need more information from the user to complete a task, you must end your response with the 🙋🏻emoji to prompt the user for more information. 
+    """
 
-    agent = create_agent(model=model, tools=tools, system_prompt="You are an AI assistant in the DevOps domain and are running inside the Digital.ai Release product as a task.")
+    agent = create_agent(model=model, tools=tools, system_prompt=system_prompt)
 
     response = await agent.ainvoke({"messages": prompt})
 
@@ -53,7 +60,7 @@ async def send_prompt(prompt, model, mcp_servers):
 
 
 def last_agent_message(output):
-    return output['messages'][-1].content
+    return output['messages'][-1].text
 
 
 def create_markdown_report(output):
