@@ -71,9 +71,6 @@ spec:
     phases:
       - phase: MCP
         tasks:
-          - name: List Agility tools
-            type: community-llm.McpListToolsTask
-            server: Agility MCP Server
           - name: Get current Agility user
             type: community-llm.McpCallTool
             server: Agility MCP Server
@@ -86,9 +83,6 @@ spec:
     phases:
       - phase: List releases
         tasks:
-          - name: List Release tools
-            type: community-llm.McpListToolsTask
-            server: Release MCP Server
           - name: Get releases
             type: community-llm.McpCallTool
             server: Release MCP Server
@@ -97,20 +91,6 @@ spec:
               {
                 "request": {}
               }
-          - name: OK?
-            type: xlrelease.GateTask
-            owner: admin
-
-  - template: List tools
-    phases:
-      - phase: List tools
-        tasks:
-          - name: List Release tools
-            type: community-llm.McpListToolsTask
-            server: Release MCP Server
-          - name: List Agility Tools
-            type: community-llm.McpListToolsTask
-            server: Agility MCP Server
           - name: OK?
             type: xlrelease.GateTask
             owner: admin
@@ -310,9 +290,3 @@ spec:
               "owner": "xebialabs-community",
               "repo": "community-release-llm-integration"
               }
-
-          - name: List Release MCP tools
-            type: community-llm.McpListToolsTask
-            description: Lists all MCP tools for this Release server
-            server: Release MCP Server
-

@@ -38,12 +38,6 @@ Connect to any MCP server and invoke its tools. No LLM reasoning, just direct to
 
 ![MCP Call Tool Task](setup/images/mcp-task-read-github-issue.png)
 
-### MCP: List Tools
-
-Lists available tools on an MCP server
-
-![MCP List Tool Task](setup/images/mcp-task-list-release-tools.png)
-
 
 ---
 # Build & Run
