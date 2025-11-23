@@ -87,6 +87,22 @@ types:
         script: community-llm.McpToolLookupScript
         containerConnection: server
 
+  community-llm.McpListToolsTask: # suffixed with "Task" to avoid name clash with OpenAI type
+    extends: community-llm.McpBaseTask
+    label: "MCP: List Tools"
+    description: Lists available tools on the MCP server
+
+    output-properties:
+      tools:
+        label: Tool definitions
+        description: The available tools on the MCP server and their descriptions
+        kind: map_string_string
+
+      inputSchema:
+        label: Input schema
+        description: The input schema for each tool
+        kind: map_string_string
+
   # MCP Scripts
 
   community-llm.McpBaseScript:
