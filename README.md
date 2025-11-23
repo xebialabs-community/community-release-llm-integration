@@ -45,9 +45,11 @@ Lists available tools on an MCP server
 
 ![MCP List Tool Task](setup/images/mcp-task-list-release-tools.png)
 
-## Examples
+## Demo templates
 
 This repo comes with example templates showing how to use the tasks.
+
+![Demo templates](setup/images/demo-templates.png)
 
 1. **MCP Examples** -- Demonstrates the MCP tool tasks that allows you to interact with 3rd party servers without having
    to write an integration plugin. (no LLM involved).
@@ -57,6 +59,7 @@ This repo comes with example templates showing how to use the tasks.
 5. **Interactive Chat example** -- Demonstrates the interactive AI Chat task.
 
 See the **Build & Run** section on how to install the examples.
+
 ---
 
 # Build & Run
