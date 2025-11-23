@@ -2,7 +2,8 @@
 
 Create AI-powered automation workflows in Release!
 
-This integration provides tasks for Release to interact with LLMs like OpenAI and Gemini and interact with any MCP servers.
+This integration provides tasks for Release to interact with LLMs like OpenAI and Gemini and interact with any MCP
+servers.
 
 * Create AI agents that perform complex tasks using MCP tools
 * Call services directly using MCP, without writing any code
@@ -44,9 +45,23 @@ Lists available tools on an MCP server
 
 ![MCP List Tool Task](setup/images/mcp-task-list-release-tools.png)
 
+## Examples
 
+This repo comes with example templates showing how to use the tasks.
+
+1. **MCP Examples** -- Demonstrates the MCP tool tasks that allows you to interact with 3rd party servers without having
+   to write an integration plugin. (no LLM involved).
+2. **Prompt examples** -- Demonstrates the AI Prompt task with different model providers (Gemini, OpenAI, etc).
+3. **MCP + Prompt examples** -- Demonstrates how to combine MCP and Prompt tasks to build AI-powered workflows.
+4. **Agent examples** -- Demonstrates the AI Agent task that combines LLM prompting with multiple MCP servers.
+5. **Interactive Chat example** -- Demonstrates the interactive AI Chat task.
+
+See the **Build & Run** section on how to install the examples.
 ---
+
 # Build & Run
+
+This section explains how to set up a local Release instance with the plugin and upload the example templates.
 
 ## Prerequisites
 
@@ -74,9 +89,8 @@ Running the environment with this plugin is a three-step process:
 2. Build and publish the plugin
 3. Upload the demo templates
 
-When developing the plugin, typically you would just do step 2 after making code changes. 
-The new version of the plugin will be picked up without having to restart the server.
-
+When developing the plugin, typically you would just do step 2 after making code changes. The new version of the plugin
+will be picked up without having to restart the server.
 
 ### 1. Start the Release environment:
 
@@ -90,7 +104,8 @@ Have Docker running and launch the environment with:
 docker compose -f dev-environment/docker-compose.yaml up -d --build 
 ```
 
-It takes a while to start up. You can see that the Release server is running when the `digitalai-release-setup` container has terminated.
+It takes a while to start up. You can see that the Release server is running when the `digitalai-release-setup`
+container has terminated.
 
 Check if you can log in with `admin/admin` at http://localhost:5516.
 
@@ -102,10 +117,10 @@ After the demo, you can stop the environment with:
 docker compose -f dev-environment/docker-compose.yaml down
 ```
 
-
 ### 2. Build & publish the plugin
 
-The `build.sh` script will build the plugin container, publish it to the local registry and install it to the local Release instance.
+The `build.sh` script will build the plugin container, publish it to the local registry and install it to the local
+Release instance.
 
 Run the build script
 
@@ -158,6 +173,7 @@ The templates will be uploaded to a new **AI Demo** folder.
 👉Add your favorite MCP Server or LLM provider under Connections and build your own example!
 
 ---
+
 ## Developing
 
 ### Run the tests

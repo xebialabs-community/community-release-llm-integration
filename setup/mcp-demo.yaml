@@ -21,7 +21,7 @@ spec:
     type: community-llm.McpServer
     url: https://api.githubcopilot.com/mcp/
     headers:
-        Authorization: !value GITHUB_TOKEN
+      Authorization: !value GITHUB_TOKEN
 
     # AI Models
   - name: Gemini 2.5 Pro
@@ -67,116 +67,136 @@ spec:
     model_id: gpt-5-nano
 
   # Demo Templates
-  - template: MCP Agility Sample
+  - template: 1. MCP examples
+    description: |
+      Demo template to show different uses of the **MCP: Call tool** task.
     phases:
-      - phase: MCP
+      - phase: Call tool
         tasks:
-          - name: List Agility tools
-            type: community-llm.McpListToolsTask
-            server: Agility MCP Server
-          - name: Get current Agility user
-            type: community-llm.McpCallTool
-            server: Agility MCP Server
-            tool: get_current_user
-          - name: OK?
-            type: xlrelease.GateTask
-            owner: admin
-
-  - template: MCP Release Sample
-    phases:
-      - phase: List releases
-        tasks:
-          - name: List Release tools
-            type: community-llm.McpListToolsTask
-            server: Release MCP Server
-          - name: Get releases
+          - name: "Release: List folders"
             type: community-llm.McpCallTool
             server: Release MCP Server
-            tool: list_releases
-            input: |
+            tool: list_folders
+            input: |-
               {
                 "request": {}
               }
-          - name: OK?
-            type: xlrelease.GateTask
-            owner: admin
-
-  - template: List tools
+          - name: "GitHub: Get my details"
+            type: community-llm.McpCallTool
+            server: GitHub MCP Server
+            tool: get_me
+          - name: "GitHub: Read sample issue"
+            type: community-llm.McpCallTool
+            server: GitHub MCP Server
+            tool: issue_read
+            input: |-
+              {
+              "issue_number": 1,
+              "method": "get",
+              "owner": "xebialabs-community",
+              "repo": "community-release-llm-integration"
+              }
+            result: ${issue}
+        color: "#3d6c9e"
+    variables:
+      - type: xlrelease.StringVariable
+        key: issue
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Issue
+        description: The issue json from GitHub
+  - template: 2. Prompt examples
+    description: |
+      "Hello world" example of the **AI: Prompt** task with different models.
     phases:
-      - phase: List tools
+      - phase: Hello world
         tasks:
-          - name: List Release tools
-            type: community-llm.McpListToolsTask
-            server: Release MCP Server
-          - name: List Agility Tools
-            type: community-llm.McpListToolsTask
-            server: Agility MCP Server
-          - name: OK?
-            type: xlrelease.GateTask
-            owner: admin
-
-  # Prompt examples
-
-  - template: 2. Prompt example
-    phases:
-      - phase: Prompt
-        tasks:
-          - name: Say hello (Gemini)
+          - name: Hello world (Gemini)
             type: community-llm.LlmPrompt
-            prompt: Say hello in six languages, one for each continent
+            taskFailureHandlerEnabled: true
+            taskRecoverOp: SKIP_TASK
+            prompt: "Say hello world in six languages, one for each continent"
             model: Gemini 2.5 Flash-Lite
-          - name: Say hello (Amazon Nova)
+          - name: Hello world (OpenAI)
             type: community-llm.LlmPrompt
-            prompt: Say hello in six languages, one for each continent
-            model: Amazon Nova Micro 1:0
-          - name: Say hello (Anthropic)
-            type: community-llm.LlmPrompt
-            prompt: Say hello in six languages, one for each continent
-            model: Anthropic Sonnet 4.5
-          - name: Say hello (OpenAI)
-            type: community-llm.LlmPrompt
-            prompt: Say hello in six languages, one for each continent
+            taskFailureHandlerEnabled: true
+            taskRecoverOp: SKIP_TASK
+            prompt: "Say hello world in six languages, one for each continent"
             model: OpenAI GPT 5 nano
-          - name: OK?
-            type: xlrelease.GateTask
-            owner: admin
-
-  # Full example
-  - template: 1. Agility summarize user
+          - name: Hello world (Digital.ai LLM Service)
+            type: community-llm.LlmPrompt
+            taskFailureHandlerEnabled: true
+            taskRecoverOp: SKIP_TASK
+            prompt: "Say hello world in six languages, one for each continent"
+            model: Amazon Nova Micro 1:0
+        color: "#3d6c9e"
+  - template: 3. MCP + Prompt examples
+    description: |
+      Shows how to combine the **MCP: Call tool** task with the **AI: prompt** task for further processing.
     phases:
       - phase: User details
         tasks:
-          - name: Get current Agility user
+          - name: "GitHub: Get my details"
             type: community-llm.McpCallTool
-            variableMapping:
-              result: "${user}"
-            server: Agility MCP Server
-            tool: get_current_user
+            server: GitHub MCP Server
+            tool: get_me
+            result: ${user}
           - name: Get name
             type: community-llm.LlmPrompt
-            variableMapping:
-              response: "${name}"
-            model: Gemini 2.5 Flash
             prompt: |-
               Extract the name from the following data. Give me only the full name as a result
               
               ```
               ${user}
               ```
+            model: Gemini 2.5 Flash
+            response: ${name}
           - name: Get summary
             type: community-llm.LlmPrompt
-            variableMapping:
-              response: "${summary}"
-            model: Gemini 2.5 Flash
             prompt: |-
               Please create a nice summary of the following data
               
               ```
               ${user}
               ```
-          - name: Summary for ${name}
-            type: xlrelease.Task
-            description: ${summary}
+            model: Gemini 2.5 Flash
+            response: ${summary}
+          - name: "Verify summary for ${name}"
+            type: xlrelease.GateTask
+            description: "${summary}"
+            owner: admin
+      - phase: List failed releases
+        tasks:
+          - name: Find failed releases
+            type: community-llm.McpCallTool
+            server: Release MCP Server
+            tool: list_releases
+            input: |-
+              {
+                "request": 
+                {
+                 "failed": true
+                }
+              }
+            result: ${releases}
+          - name: Create a summary
+            type: community-llm.LlmPrompt
+            prompt: |-
+              Make a summary of the failed releases:
+              
+              ```
+              ${releases}
+              ```
+            model: Gemini 2.5 Flash
+            response: ${release_summary}
+          - name: Verify
+            type: xlrelease.GateTask
+            description: |-
+              ## Failed releases
+              
+              ${release_summary}
+            owner: admin
+        color: "#3d6c9e"
     variables:
       - type: xlrelease.StringVariable
         key: user
@@ -196,28 +216,92 @@ spec:
         showOnReleaseStart: false
         label: User name
         description: Subject of the message.
-
-  # Langchain example
-
-  - template: 3. Release Agent demo
+      - type: xlrelease.StringVariable
+        key: releases
+        requiresValue: false
+        showOnReleaseStart: false
+        label: ßReleases
+        description: Result
+      - type: xlrelease.StringVariable
+        key: release_summary
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Failed release summary
+  - template: 4. Agent examples
+    description: |
+      Example usage of the **AI: Agent** task
     phases:
-      - phase: Report
+      - phase: Agent with MCP
         tasks:
-          - name: Fix last failed release
+          - name: Create user summary
             type: community-llm.LlmAgent
-            prompt: |
-              Create a GitHub issue to fix the last failed release in xebialabs-community/community-release-llm-integration repo. 
-              
-              Cause: Jenkins ran out of space
-              Root cause: Builds take too long
+            prompt: Create a nice summary for the currently logged in user.
             model: Gemini 2.5 Flash
             mcpServer1: GitHub MCP Server
-          - name: OK?
+            result: ${summary}
+          - name: Verify
             type: xlrelease.GateTask
+            description: |-
+              ## User details
+              
+              ${summary}
             owner: admin
-
-
-  - template: 4. Chat example
+        color: "#3d6c9e"
+      - phase: Check phases
+        tasks:
+          - name: Analyze templates
+            type: community-llm.LlmAgent
+            prompt: Analyze all templates in the "AI Demo" folder and report on tasks that
+              are duplicated across templates.
+            model: Gemini 2.5 Flash
+            mcpServer1: Release MCP Server
+            result: ${duplicates}
+          - name: Verify
+            type: xlrelease.GateTask
+            description: |-
+              ## Template summary
+              
+              ${duplicates}
+        color: "#3d6c9e"
+      - phase: Multiple MCP servers
+        tasks:
+          - name: Create GitHub ticket for last failed release
+            type: community-llm.LlmAgent
+            description: |-
+              Attempt to make the agent "create a ticket for the last release that failed"
+              
+              ⚠️ Not working yet. The agent / models seem to get very confused and tend to give up.
+            prompt: |-
+              List all releases in Digital.ai Release.
+              
+              For the last release in FAILED state, create a GitHub issue in xebialabs-community/community-release-llm-integration repo to fix it.
+              
+              Mention Release title, date and cause in the ticket
+            model: Gemini 2.5 Pro
+            mcpServer1: Release MCP Server
+            mcpServer2: GitHub MCP Server
+          - name: Verify
+            type: xlrelease.GateTask
+            description: |-
+              Check if there is a new issue created here:
+              
+              * https://github.com/xebialabs-community/community-release-llm-integration/issues
+            owner: admin
+        color: "#3d6c9e"
+    variables:
+      - type: xlrelease.StringVariable
+        key: summary
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Result
+        description: The result returned by the agent
+      - type: xlrelease.StringVariable
+        key: duplicates
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Result
+        description: The result returned by the agent
+  - template: 5.  Interactive Chat example
     phases:
       - phase: Prompt
         tasks:
@@ -229,39 +313,6 @@ spec:
             owner: admin
     scriptUsername: admin
     scriptUserPassword: admin
-
-  - template: Read GitHub issue
-    phases:
-    - phase: Read issue
-      tasks:
-      - name: Read sample issue
-        type: community-llm.McpCallTool
-        server: GitHub MCP Server
-        tool: issue_read
-        input: |-
-          {
-          "issue_number": 1,
-          "method": "get",
-          "owner": "xebialabs-community",
-          "repo": "community-release-llm-integration"
-          }
-        result: ${issue}
-      - name: Check issue
-        type: xlrelease.GateTask
-        description: |-
-          # Issue found
-  
-          ```
-          ${issue}
-          ```
-      color: "#3d6c9e"
-    variables:
-    - type: xlrelease.StringVariable
-      key: issue
-      requiresValue: false
-      showOnReleaseStart: false
-      label: Issue
-      description: The issue json from GitHub
 
   - template: Tasks for README screenshots
     variables:
