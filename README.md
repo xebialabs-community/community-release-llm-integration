@@ -49,8 +49,6 @@ Lists available tools on an MCP server
 
 This repo comes with example templates showing how to use the tasks.
 
-![Demo templates](setup/images/demo-templates.png)
-
 1. **MCP Examples** -- Demonstrates the MCP tool tasks that allows you to interact with 3rd party servers without having
    to write an integration plugin. (no LLM involved).
 2. **Prompt examples** -- Demonstrates the AI Prompt task with different model providers (Gemini, OpenAI, etc).
@@ -59,6 +57,11 @@ This repo comes with example templates showing how to use the tasks.
 5. **Interactive Chat example** -- Demonstrates the interactive AI Chat task.
 
 See the **Build & Run** section on how to install the examples.
+
+![Demo templates](setup/images/demo-templates.png)
+
+![An example template](setup/images/template-example.png)
+
 
 ---
 
