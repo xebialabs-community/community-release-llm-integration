@@ -9,13 +9,20 @@ class LlmPrompt(BaseTask):
     def execute(self) -> None:
         # Get input
         prompt = self.input_properties.get('prompt')
-        model = self.input_properties['model']
-
+        if prompt is None:
+            raise ValueError("Prompt field cannot be empty")
+        model = self.input_properties.get('model')
+        if model is None:
+            raise ValueError("Model field cannot be empty")
         # Call agent
         self.set_status_line("AI is thinking")
         model_connector = create_model(model)
-        output = model_connector.invoke(prompt)
-        response = output.content
+        try:
+            output = model_connector.invoke(prompt)
+            response = output.content
+        except Exception as e:
+            root, error_details = format_exception(e)
+            raise RuntimeError(f"LLM invocation failed - {error_details}") from root
 
         # Send comment to the task UI
         comment = markdown_quote(prompt)
@@ -66,3 +73,23 @@ def markdown_quote(text: str) -> str:
     lines = text.split('\n')
     quoted_lines = [f"> {line}" for line in lines]
     return '\n'.join(quoted_lines) + '\n\n'
+
+
+def unwrap_exception(exc: BaseException) -> BaseException:
+    if isinstance(exc, BaseExceptionGroup) and exc.exceptions:
+        return unwrap_exception(exc.exceptions[0])
+
+    if exc.__cause__:
+        return unwrap_exception(exc.__cause__)
+
+    if exc.__context__:
+        return unwrap_exception(exc.__context__)
+
+    return exc
+
+def format_exception(exc: BaseException) -> tuple[BaseException, str]:
+    """Get the root exception and a formatted error message, handling empty messages."""
+    root = unwrap_exception(exc)
+    error_msg = str(root).strip() if str(root).strip() else "No error details provided"
+    formatted = f"{type(root).__name__}: {error_msg}"
+    return root, formatted

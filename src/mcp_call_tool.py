@@ -16,7 +16,12 @@ class McpCallTool(BaseTask):
         if server is None:
             raise ValueError("Server field cannot be empty")
         tool = self.input_properties['tool']
+        if not tool:
+            raise ValueError("Tool name cannot be empty")
+
         tool_input = self.input_properties['input']
+        timeout = self.input_properties.get('timeout')
+
         if not tool_input:
             tool_input = {}
         else:
@@ -25,13 +30,16 @@ class McpCallTool(BaseTask):
             except json.JSONDecodeError:
                 raise ValueError("Invalid JSON for input")
 
-        # print("Tool Input:\n", tool_input)
-
         transport = create_transport(server)
 
         # Make request
         client = Client(transport)
-        output = asyncio.run(call_tool(client, tool, tool_input))
+        try:
+            output = asyncio.run(call_tool(client, tool, tool_input, timeout))
+        except asyncio.TimeoutError:
+            raise TimeoutError(f"Tool execution timed out after {timeout} seconds")
+        except Exception as e:
+            raise RuntimeError(f"MCP error calling tool '{tool}': {str(e)}")
 
         result = extract_result_text(output)
 
@@ -55,22 +63,30 @@ def create_transport(server) -> ClientTransport:
 
 
 # Async method to call tool
-async def call_tool(client, tool, input):
+async def call_tool(client, tool, input, timeout=300):
     async with client:
-        return await client.call_tool(tool, input)
+        return await asyncio.wait_for(
+            client.call_tool(tool, input),
+            timeout=timeout
+        )
 
 
 def extract_result_text(result: CallToolResult) -> str:
     """
-    Flatten CallToolResult into a single string.
+    Extract result from CallToolResult into a formatted string.
     Preference order:
     1. structured_content (if dict/list) -> JSON-ish repr
     2. data (if primitive)
     3. concatenated text content
     """
     # structured_content may already be serializable
+
     if result.structured_content is not None:
-        return str(result.structured_content)
+        try:
+            return json.dumps(result.structured_content, indent=2)
+        except (TypeError, ValueError):
+            return str(result.structured_content)
+
     if result.data is not None:
         return str(result.data)
 
