@@ -8,6 +8,9 @@ services:
       - ADMIN_PASSWORD=admin
       - ACCEPT_EULA=Y
       - SERVER_URL=http://host.docker.internal:5516
+    models:
+      - smollm2
+      - llama
 
   digitalai-release-setup:
     build: digitalai-release-setup
@@ -67,3 +70,9 @@ services:
       - CATALOG_ELEMENTS_LIMIT=1000
     depends_on:
       - container-registry
+
+models:
+  smollm2:
+    model: ai/smollm2
+  llama:
+    model: ai/llama3.2

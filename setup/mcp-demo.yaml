@@ -66,6 +66,18 @@ spec:
     apiKey: !value OPENAI_API_KEY
     model_id: gpt-5-nano
 
+  - name: SmolLM2 (local)
+    type: community-llm.OpenAiModel
+    url: http://model-runner.docker.internal/engines/v1
+    apiKey: none
+    model_id: smollm2
+
+  - name: Llama 3.2 (local)
+    type: community-llm.OpenAiModel
+    url: http://model-runner.docker.internal/engines/v1
+    apiKey: none
+    model_id: llama3.2
+
   # Demo Templates
   - template: 1. MCP examples
     description: |
@@ -107,29 +119,48 @@ spec:
         description: The issue json from GitHub
   - template: 2. Prompt examples
     description: |
-      "Hello world" example of the **AI: Prompt** task with different models.
+      Test different models with the same prompt.
     phases:
-      - phase: Hello world
+      - phase: Test different models
         tasks:
-          - name: Hello world (Gemini)
+          - name: Gemini
             type: community-llm.LlmPrompt
             taskFailureHandlerEnabled: true
             taskRecoverOp: SKIP_TASK
-            prompt: "Say hello world in six languages, one for each continent"
+            prompt: "${prompt}"
             model: Gemini 2.5 Flash-Lite
-          - name: Hello world (OpenAI)
+          - name: OpenAI
             type: community-llm.LlmPrompt
             taskFailureHandlerEnabled: true
             taskRecoverOp: SKIP_TASK
-            prompt: "Say hello world in six languages, one for each continent"
+            prompt: "${prompt}"
             model: OpenAI GPT 5 nano
-          - name: Hello world (Digital.ai LLM Service)
+          - name: Nova Micro  (Digital.ai LLM Service)
             type: community-llm.LlmPrompt
             taskFailureHandlerEnabled: true
             taskRecoverOp: SKIP_TASK
-            prompt: "Say hello world in six languages, one for each continent"
+            prompt: "${prompt}"
             model: Amazon Nova Micro 1:0
-        color: "#3d6c9e"
+          - name: SmolLM2 (local Docker)
+            type: community-llm.LlmPrompt
+            taskFailureHandlerEnabled: true
+            taskRecoverOp: SKIP_TASK
+            prompt: "${prompt}"
+            model: Smollm2 (local)
+          - name: Llama 3.2 (local Docker)
+            type: community-llm.LlmPrompt
+            taskFailureHandlerEnabled: true
+            taskRecoverOp: SKIP_TASK
+            prompt: "${prompt}"
+            model: Llama 3.2 (local)
+    variables:
+      - type: xlrelease.StringVariable
+        key: prompt
+        label: Prompt
+        description: The prompt to be answered by the AI model
+        value: |
+          Say hello world in six languages, one for each continent
+        multiline: true
   - template: 3. MCP + Prompt examples
     description: |
       Shows how to combine the **MCP: Call tool** task with the **AI: prompt** task for further processing.
