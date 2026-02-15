@@ -154,7 +154,7 @@ types:
         required: true
         password: true
       model_id:
-        label: Model
+        label: AI Model
         description: The model to use
         kind: string
 
@@ -232,6 +232,7 @@ types:
 
   community-llm.BasePrompt:
     extends: xlrelease.ContainerTask
+    virtual: true
 
     hidden-properties:
       image:
