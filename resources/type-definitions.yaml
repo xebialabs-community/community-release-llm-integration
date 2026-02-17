@@ -154,6 +154,9 @@ types:
     extends: xlrelease.Configuration
     virtual: true
 
+    hidden-properties:
+      testConnectionScript: community-llm.LlmTestConnection
+
     properties:
       apiKey:
         label: API Key
@@ -331,3 +334,28 @@ types:
       result:
         description: The result returned by the agent
         kind: string
+
+  #
+  # LLM scripts
+  #
+
+  community-llm.LlmBaseScript:
+    extends: xlrelease.RemoteScriptExecution
+    virtual: true
+    hidden-properties:
+      image:
+        default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
+        transient: true
+    output-properties:
+      commandResponse:
+        kind: map_string_string
+      errorMessage:
+        kind: map_string_string
+
+  community-llm.LlmTestConnection:
+    extends: community-llm.LlmBaseScript
+
+    input-properties:
+      server:
+        kind: ci
+        referenced-type: community-llm.BaseModel

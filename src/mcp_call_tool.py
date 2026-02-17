@@ -73,7 +73,7 @@ async def call_tool(client, tool, input, timeout=300):
 
 def extract_result_text(result: CallToolResult) -> str:
     """
-    Extract result from CallToolResult into a formatted string.
+    Flatten CallToolResult into a single string.
     Preference order:
     1. structured_content (if dict/list) -> JSON-ish repr
     2. data (if primitive)
@@ -82,10 +82,7 @@ def extract_result_text(result: CallToolResult) -> str:
     # structured_content may already be serializable
 
     if result.structured_content is not None:
-        try:
-            return json.dumps(result.structured_content, indent=2)
-        except (TypeError, ValueError):
-            return str(result.structured_content)
+        return str(result.structured_content)
 
     if result.data is not None:
         return str(result.data)
