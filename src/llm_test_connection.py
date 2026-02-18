@@ -1,6 +1,6 @@
 from digitalai.release.integration import BaseTask
 
-from src.llm_prompt import create_model, format_exception
+from src.llm_prompt import create_model
 
 
 class LlmTestConnection(BaseTask):
@@ -17,7 +17,7 @@ class LlmTestConnection(BaseTask):
             else:
                 result = {"success": False, "output": "Connected but no response"}
 
-        except BaseException as e:
+        except Exception as e:
             error_msg = f"{type(e).__name__}: {str(e)[:200]}"
             result = {"success": False, "output": error_msg}
         finally:

@@ -39,7 +39,7 @@ class McpCallTool(BaseTask):
         except asyncio.TimeoutError:
             raise TimeoutError(f"Tool execution timed out after {timeout} seconds")
         except Exception as e:
-            raise RuntimeError(f"MCP error calling tool '{tool}': {str(e)}")
+            raise RuntimeError(f"MCP error calling tool '{tool}': {str(e)}") from e
 
         result = extract_result_text(output)
 

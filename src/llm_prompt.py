@@ -9,7 +9,7 @@ class LlmPrompt(BaseTask):
     def execute(self) -> None:
         # Get input
         prompt = self.input_properties.get('prompt')
-        if prompt is None:
+        if not prompt or not prompt.strip():
             raise ValueError("Prompt field cannot be empty")
         model = self.input_properties.get('model')
         if model is None:

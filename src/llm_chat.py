@@ -95,7 +95,7 @@ class LlmChat(BaseTask):
 
         return answer_marker
 
-    def wait_for_next_prompt(self, marker, max_idle_timeout: int):
+    def wait_for_next_prompt(self, marker, max_idle_timeout: int = 300):
 
         comments, last_response_index = self.wait_for_last_response(marker)
 
