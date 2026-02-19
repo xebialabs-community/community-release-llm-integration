@@ -7,6 +7,7 @@ from langchain.agents import create_agent
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from src.llm_prompt import create_model, markdown_quote, format_exception
+from src.mcp_auth import create_auth_headers
 
 
 class LlmAgent(BaseTask):
@@ -26,10 +27,13 @@ class LlmAgent(BaseTask):
                 transport = server['transport']
                 if transport == 'http':
                     transport = 'streamable_http'
+
+                auth_headers = create_auth_headers(server)
+
                 mcp_servers[server['title']] = {
                     "url": server['url'],
                     "transport": transport,
-                    "headers": server.get('headers', {})
+                    "headers": auth_headers
                 }
 
         # Call agent
