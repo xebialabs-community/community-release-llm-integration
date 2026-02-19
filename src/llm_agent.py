@@ -6,7 +6,8 @@ from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain.agents import create_agent
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
-from src.llm_prompt import create_model, markdown_quote
+from src.llm_prompt import create_model, markdown_quote, format_exception
+from src.mcp_auth import create_auth_headers
 
 
 class LlmAgent(BaseTask):
@@ -14,7 +15,11 @@ class LlmAgent(BaseTask):
     def execute(self) -> None:
         # Get input
         prompt = self.input_properties.get('prompt')
+        if prompt is None:
+            raise ValueError("Prompt field cannot be empty")
         model = self.input_properties['model']
+        if model is None:
+            raise ValueError("Model field cannot be empty")
         mcp_servers = {}
         for server in [self.input_properties.get('mcpServer1'), self.input_properties.get('mcpServer2'),
                        self.input_properties.get('mcpServer3')]:
@@ -22,16 +27,23 @@ class LlmAgent(BaseTask):
                 transport = server['transport']
                 if transport == 'http':
                     transport = 'streamable_http'
+
+                auth_headers = create_auth_headers(server)
+
                 mcp_servers[server['title']] = {
                     "url": server['url'],
                     "transport": transport,
-                    "headers": server.get('headers', {})
+                    "headers": auth_headers
                 }
 
         # Call agent
         model_connector = create_model(model)
-        output = asyncio.run(send_prompt(prompt, model_connector, mcp_servers))
-        print("AgentPrompt Result:\n", output)
+        try:
+            output = asyncio.run(send_prompt(prompt, model_connector, mcp_servers))
+            print("AgentPrompt Result:\n", output)
+        except Exception as e:
+            root, error_details = format_exception(e)
+            raise RuntimeError(f"Agent execution failed - {error_details}") from root
 
         report = create_markdown_report(output)
         self.add_comment(report)
@@ -49,7 +61,7 @@ async def send_prompt(prompt, model, mcp_servers):
     tools = await client.get_tools()
     system_prompt = """
     You are an AI assistant in the DevOps domain and are running inside the Digital.ai Release product as a task.
-    If you need more information from the user to complete a task, you must end your response with the 🙋🏻emoji to prompt the user for more information. 
+    If you need more information from the user to complete a task, you must end your response with the 🙋🏻emoji to prompt the user for more information.
     """
 
     agent = create_agent(model=model, tools=tools, system_prompt=system_prompt)

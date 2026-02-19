@@ -146,7 +146,7 @@ spec:
             taskFailureHandlerEnabled: true
             taskRecoverOp: SKIP_TASK
             prompt: "${prompt}"
-            model: Smollm2 (local)
+            model: SmolLM2 (local)
           - name: Llama 3.2 (local Docker)
             type: community-llm.LlmPrompt
             taskFailureHandlerEnabled: true

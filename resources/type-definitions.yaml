@@ -72,9 +72,16 @@ types:
           method-ref: tool-lookup
 
       input:
-        description: The input as a JSON string.
+        description: The input as a JSON string
         kind: string
         size: large
+        required: false
+
+      timeout:
+        label: Timeout
+        description: Tool execution timeout in seconds
+        kind: integer
+        default: 300
         required: false
 
     output-properties:
@@ -146,6 +153,9 @@ types:
   community-llm.BaseModel:
     extends: xlrelease.Configuration
     virtual: true
+
+    hidden-properties:
+      testConnectionScript: community-llm.LlmTestConnection
 
     properties:
       apiKey:
@@ -264,13 +274,18 @@ types:
   community-llm.LlmChat:
     extends: community-llm.BasePrompt
     label: "AI: Chat"
-    description: Chats with the LLM. Send 'Stop chat' to end the chat.
+    description: Chats with the LLM. Send 'Stop chat' to end the chat
 
     input-properties:
       model:
         description: The LLM model to use
         kind: ci
         referenced-type: community-llm.BaseModel
+      maxIdleTimeout:
+        description: Idle time in seconds before chat termination
+        kind: integer
+        default: 300
+        required: false
 
     output-properties:
       response:
@@ -281,7 +296,7 @@ types:
   community-llm.LlmAgent:
     extends: xlrelease.ContainerTask
     label: "AI: Agent"
-    description: Asks AI agent to do something with multiple MCP server support.
+    description: Asks AI agent to do something with multiple MCP server support
 
     hidden-properties:
       image:
@@ -319,3 +334,28 @@ types:
       result:
         description: The result returned by the agent
         kind: string
+
+  #
+  # LLM scripts
+  #
+
+  community-llm.LlmBaseScript:
+    extends: xlrelease.RemoteScriptExecution
+    virtual: true
+    hidden-properties:
+      image:
+        default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
+        transient: true
+    output-properties:
+      commandResponse:
+        kind: map_string_string
+      errorMessage:
+        kind: map_string_string
+
+  community-llm.LlmTestConnection:
+    extends: community-llm.LlmBaseScript
+
+    input-properties:
+      server:
+        kind: ci
+        referenced-type: community-llm.BaseModel

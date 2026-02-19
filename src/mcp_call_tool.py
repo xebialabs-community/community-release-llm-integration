@@ -6,6 +6,7 @@ from fastmcp.client import StreamableHttpTransport, SSETransport, ClientTranspor
 from fastmcp.client.client import CallToolResult
 import json
 from mcp.types import TextContent
+from src.mcp_auth import create_auth_headers
 
 
 class McpCallTool(BaseTask):
@@ -16,7 +17,12 @@ class McpCallTool(BaseTask):
         if server is None:
             raise ValueError("Server field cannot be empty")
         tool = self.input_properties['tool']
+        if not tool:
+            raise ValueError("Tool name cannot be empty")
+
         tool_input = self.input_properties['input']
+        timeout = self.input_properties.get('timeout')
+
         if not tool_input:
             tool_input = {}
         else:
@@ -25,13 +31,16 @@ class McpCallTool(BaseTask):
             except json.JSONDecodeError:
                 raise ValueError("Invalid JSON for input")
 
-        # print("Tool Input:\n", tool_input)
-
         transport = create_transport(server)
 
         # Make request
         client = Client(transport)
-        output = asyncio.run(call_tool(client, tool, tool_input))
+        try:
+            output = asyncio.run(call_tool(client, tool, tool_input, timeout))
+        except asyncio.TimeoutError:
+            raise TimeoutError(f"Tool execution timed out after {timeout} seconds")
+        except Exception as e:
+            raise RuntimeError(f"MCP error calling tool '{tool}': {str(e)}") from e
 
         result = extract_result_text(output)
 
@@ -41,6 +50,8 @@ class McpCallTool(BaseTask):
 
 def create_transport(server) -> ClientTransport:
     server_url = server['url'].strip("/")
+    auth_headers = create_auth_headers(server)
+
     if server['transport'] == 'sse':
         transport = SSETransport(
             url=server_url,
@@ -49,15 +60,20 @@ def create_transport(server) -> ClientTransport:
         transport = StreamableHttpTransport(
             url=server_url,
         )
+
     transport.url = server_url
-    transport.headers = server['headers'] if 'headers' in server else {}
+    transport.headers = auth_headers
+
     return transport
 
 
 # Async method to call tool
-async def call_tool(client, tool, input):
+async def call_tool(client, tool, input, timeout=300):
     async with client:
-        return await client.call_tool(tool, input)
+        return await asyncio.wait_for(
+            client.call_tool(tool, input),
+            timeout=timeout
+        )
 
 
 def extract_result_text(result: CallToolResult) -> str:
@@ -69,8 +85,10 @@ def extract_result_text(result: CallToolResult) -> str:
     3. concatenated text content
     """
     # structured_content may already be serializable
+
     if result.structured_content is not None:
         return str(result.structured_content)
+
     if result.data is not None:
         return str(result.data)
 
