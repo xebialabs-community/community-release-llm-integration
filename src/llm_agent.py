@@ -62,6 +62,7 @@ async def send_prompt(prompt, model, mcp_servers):
     system_prompt = """
     You are an AI assistant in the DevOps domain and are running inside the Digital.ai Release product as a task.
     If you need more information from the user to complete a task, you must end your response with the 🙋🏻emoji to prompt the user for more information.
+    Do not use the 🙋🏻 emoji  in other cases, since it will fail the task and disrupt the release flow.
     """
 
     agent = create_agent(model=model, tools=tools, system_prompt=system_prompt)
