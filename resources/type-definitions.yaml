@@ -24,6 +24,16 @@ types:
       url:
         description: The target MCP Server URL
         required: true
+      authenticationMethod:
+        description: The authentication method to use
+        kind: enum
+        required: false
+        enum-class: com.xebialabs.xlrelease.domain.configuration.HttpConnection$AuthenticationMethod
+        enum-values:
+          - None
+          - Basic
+          - Bearer
+          - PAT
       transport:
         label: Transport Protocol
         description: The transport protocol to use

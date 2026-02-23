@@ -7,7 +7,7 @@ from langchain.agents import create_agent
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from src.llm_prompt import create_model, markdown_quote, format_exception
-from src.mcp_auth import create_auth_headers
+from src.http_auth import create_auth_headers
 
 
 class LlmAgent(BaseTask):

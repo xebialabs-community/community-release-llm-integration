@@ -42,5 +42,8 @@ def create_auth_headers(server: Dict) -> Dict[str, str]:
         credentials = f":{token}"
         encoded = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
         headers['Authorization'] = f'Basic {encoded}'
+        
+    else:
+        raise ValueError(f"Unsupported authentication method: {auth_method}")
 
     return headers

@@ -6,7 +6,7 @@ from fastmcp.client import StreamableHttpTransport, SSETransport, ClientTranspor
 from fastmcp.client.client import CallToolResult
 import json
 from mcp.types import TextContent
-from src.mcp_auth import create_auth_headers
+from src.http_auth import create_auth_headers
 
 
 class McpCallTool(BaseTask):

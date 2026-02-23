@@ -1,13 +1,13 @@
 """
-Unit tests for the MCP authentication helper.
+Unit tests for the HTTP authentication helper.
 """
 
 import unittest
 import base64
-from src.mcp_auth import create_auth_headers
+from src.http_auth import create_auth_headers
 
 
-class TestMcpAuth(unittest.TestCase):
+class TestHttpAuth(unittest.TestCase):
 
     def test_none_authentication(self):
         server = {
