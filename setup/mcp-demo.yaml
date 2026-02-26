@@ -9,6 +9,7 @@ spec:
   - name: Agility MCP Server
     type: community-llm.McpServer
     url: https://api.staging.digital.ai/agilitymcp/v1/mcp
+    authenticationMethod: None
     headers:
       X-Agility-Bearer: !value AGILITY_KEY
       X-Agility-Host: https://www7.v1host.com/V1Production
@@ -16,12 +17,13 @@ spec:
   - name: Release MCP Server
     type: community-llm.McpServer
     url: http://host.docker.internal:8000/mcp
+    authenticationMethod: None
 
   - name: GitHub MCP Server
     type: community-llm.McpServer
     url: https://api.githubcopilot.com/mcp/
-    headers:
-      Authorization: !value GITHUB_TOKEN
+    authenticationMethod: Bearer
+    password: GITHUB_TOKEN
 
     # AI Models
   - name: Gemini 2.5 Pro
@@ -300,8 +302,6 @@ spec:
             type: community-llm.LlmAgent
             description: |-
               Attempt to make the agent "create a ticket for the last release that failed"
-              
-              ⚠️ Not working yet. The agent / models seem to get very confused and tend to give up.
             prompt: |-
               List all releases in Digital.ai Release.
               
