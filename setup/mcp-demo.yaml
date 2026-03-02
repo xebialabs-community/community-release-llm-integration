@@ -450,7 +450,7 @@ spec:
     scriptUserPassword: !value "RELEASE_SCRIPT_PASSWORD"
     riskProfile: Default risk profile
 
-  - template: Compare LLM Summaries
+  - template: LLM Shoot-out
     defaultTargetFolder: AI Demo
     allowTargetFolderOverride: false
     phases:
