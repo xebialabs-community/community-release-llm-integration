@@ -61,7 +61,7 @@ types:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
       iconLocation: mcp.png
-      taskColor: "#5F5FFF"
+      taskColor: "#9E2FD7"
 
     input-properties:
       server:
@@ -258,8 +258,8 @@ types:
       image:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
-      iconLocation: prompt.png
-      taskColor: "#C88BFF"
+      iconLocation: ai.png
+      taskColor: "#9E2FD7"
 
   community-llm.LlmPrompt:
     extends: community-llm.BasePrompt
@@ -312,8 +312,8 @@ types:
       image:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
-      iconLocation: agent.png
-      taskColor: "#EE9037"
+      iconLocation: ai.png
+      taskColor: "#9E2FD7"
 
     input-properties:
       prompt:
