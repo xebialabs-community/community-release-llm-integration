@@ -61,7 +61,7 @@ types:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
       iconLocation: mcp.png
-      taskColor: "#9E2FD7"
+      taskColor: "#5F5FFF"
 
     input-properties:
       server:
