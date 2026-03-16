@@ -10,3 +10,4 @@ dev-environment/
 .idea/
 build/
 tests/
+setup/
