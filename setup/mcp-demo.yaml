@@ -68,18 +68,6 @@ spec:
     apiKey: !value OPENAI_API_KEY
     model_id: gpt-5-nano
 
-  - name: SmolLM2 (local)
-    type: community-llm.OpenAiModel
-    url: http://model-runner.docker.internal/engines/v1
-    apiKey: none
-    model_id: smollm2
-
-  - name: Llama 3.2 (local)
-    type: community-llm.OpenAiModel
-    url: http://model-runner.docker.internal/engines/v1
-    apiKey: none
-    model_id: llama3.2
-
   # Demo Templates
   - template: 1. MCP examples
     description: |
@@ -143,18 +131,6 @@ spec:
             taskRecoverOp: SKIP_TASK
             prompt: "${prompt}"
             model: Amazon Nova Micro 1:0
-          - name: SmolLM2 (local Docker)
-            type: community-llm.LlmPrompt
-            taskFailureHandlerEnabled: true
-            taskRecoverOp: SKIP_TASK
-            prompt: "${prompt}"
-            model: SmolLM2 (local)
-          - name: Llama 3.2 (local Docker)
-            type: community-llm.LlmPrompt
-            taskFailureHandlerEnabled: true
-            taskRecoverOp: SKIP_TASK
-            prompt: "${prompt}"
-            model: Llama 3.2 (local)
     variables:
       - type: xlrelease.StringVariable
         key: prompt
@@ -347,9 +323,9 @@ spec:
 
   - template: 6.  Adaptive Orchestration example
     description: |
-       "Demonstrates adaptive orchestration in Digital.ai Release by intentionally
-       failing a task, introducing an AI Agent into the running release to assess the
-       failure and generate a targeted remediation plan."
+      "Demonstrates adaptive orchestration in Digital.ai Release by intentionally
+      failing a task, introducing an AI Agent into the running release to assess the
+      failure and generate a targeted remediation plan."
     phases:
       - phase: Prompt
         tasks:
@@ -459,7 +435,7 @@ spec:
           - name: Provide a text to summarize
             type: xlrelease.UserInputTask
             description: |-
-              The source text will be summarized by three different AI models: GPT-5, Smol (a very small local model) and Llama 3.2
+              The source text will be summarized by three different AI models: GPT-5, Gemini Flash lite, and Amazon Nova Micro. 
               
               Finally, the Gemini model will compare and judge the results.
             variables:
@@ -480,7 +456,7 @@ spec:
                   
                   ${text}
                 model: OpenAI GPT 5
-              - name: Smol
+              - name: Gemini 2.5 Flash
                 type: community-llm.LlmPrompt
                 variableMapping:
                   response: ${summary2}
@@ -492,11 +468,11 @@ spec:
                   Text:
                   
                   ${text}
-                model: SmolLM2 (local)
-              - name: Llama
+                model: Gemini 2.5 Flash
+              - name: Amazon Nova Micro
                 type: community-llm.LlmPrompt
                 variableMapping:
-                  response: ${summary3}
+                  response: ${summary2}
                 capabilities:
                   - remote
                 prompt: |-
@@ -505,23 +481,23 @@ spec:
                   Text:
                   
                   ${text}
-                model: Llama 3.2 (local)
+                model: Amazon Nova Micro 1:0
           - name: Resulting summaries
             type: xlrelease.Task
             description: |-
               These are the results that the LLM's came up with:
               
-              ## GPT -5
+              ## GPT-5
               
               ${summary1}
               
               ---
-              ## Smol
+              ## Gemini Flash
               
               ${summary2}
               
               ---
-              ## Llama 3.2
+              ## Amazon Nova Micro
               
               ${summary3}
           - name: Compare (Gemini)
@@ -545,15 +521,15 @@ spec:
               ${summary1}
               
               ---
-              2. Smol (local):
+              2. Gemini Flash (local):
               
               ${summary2}
               
               ---
-              3. Llama 3.2 (local):
+              3. Amazon Nova Micro (local):
               
               ${summary3}
-            model: Gemini 2.5 Flash
+            model: Gemini 2.5 Flash-Lite
           - name: Jury report
             type: xlrelease.Task
             description: "${report}"
