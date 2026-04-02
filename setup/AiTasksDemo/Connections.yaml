@@ -1,0 +1,63 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      26.1.0-322.130
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  path: /
+  home: AI Tasks Demo
+spec:
+- name: Agility MCP Server
+  type: community-llm.McpServer
+  capabilities:
+  - remote
+  url: https://api.staging.digital.ai/agilitymcp/v1/mcp
+  authenticationMethod: None
+  headers:
+    X-Agility-Host: https://www7.v1host.com/V1Production
+    X-Agility-Bearer: 1.kqY4j5ce3Jm+THEi1bKzB5UQt6A=
+- name: GitHub MCP Server
+  type: community-llm.McpServer
+  password: !value "community_llm_McpServer_GitHub_MCP_Server_password"
+  capabilities:
+  - remote
+  url: https://api.githubcopilot.com/mcp/
+  authenticationMethod: Bearer
+- name: Release MCP Server
+  type: community-llm.McpServer
+  capabilities:
+  - remote
+  url: http://host.docker.internal:8000/mcp
+  authenticationMethod: None
+- name: Amazon Nova Micro 1:0
+  type: community-llm.DaiLlmModel
+  apiKey: !value "community_llm_DaiLlmModel_Amazon_Nova_Micro_1_0_apiKey"
+  model_id: amazon.nova-micro-v1:0
+- name: Anthropic Sonnet 4.5
+  type: community-llm.DaiLlmModel
+  apiKey: !value "community_llm_DaiLlmModel_Anthropic_Sonnet_4_5_apiKey"
+  model_id: anthropic.claude-sonnet-4-5-20250929-v1:0
+- name: Gemini 2.5 Flash
+  type: community-llm.GeminiModel
+  apiKey: !value "community_llm_GeminiModel_Gemini_2_5_Flash_apiKey"
+- name: Gemini 2.5 Flash-Lite
+  type: community-llm.GeminiModel
+  apiKey: !value "community_llm_GeminiModel_Gemini_2_5_Flash_Lite_apiKey"
+  model_id: gemini-2.5-flash-lite
+- name: Gemini 2.5 Pro
+  type: community-llm.GeminiModel
+  apiKey: !value "community_llm_GeminiModel_Gemini_2_5_Pro_apiKey"
+  model_id: gemini-2.5-pro
+- name: OpenAI GPT 5
+  type: community-llm.OpenAiModel
+  apiKey: !value "community_llm_OpenAiModel_OpenAI_GPT_5_apiKey"
+  model_id: gpt-5
+- name: OpenAI GPT 5 mini
+  type: community-llm.OpenAiModel
+  apiKey: !value "community_llm_OpenAiModel_OpenAI_GPT_5_mini_apiKey"
+  model_id: gpt-5-mini
+- name: OpenAI GPT 5 nano
+  type: community-llm.OpenAiModel
+  apiKey: !value "community_llm_OpenAiModel_OpenAI_GPT_5_nano_apiKey"
+  model_id: gpt-5-nano

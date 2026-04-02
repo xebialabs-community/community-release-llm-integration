@@ -1,0 +1,120 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      26.1.0-322.130
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  path: /
+  home: AI Tasks Demo
+spec:
+- template: 3. MCP + Prompt examples
+  description: "Shows how to combine the **MCP: Call tool** task with the **AI: prompt**\
+    \ task for further processing."
+  scheduledStartDate: 2026-04-02T09:31:10.293Z
+  dueDate: 2026-04-02T10:31:10.293Z
+  phases:
+  - phase: User details
+    tasks:
+    - name: "GitHub: Get my details"
+      type: community-llm.McpCallTool
+      capabilities:
+      - remote
+      server: GitHub MCP Server
+      tool: get_me
+      result: "${user}"
+    - name: Get name
+      type: community-llm.LlmPrompt
+      capabilities:
+      - remote
+      prompt: |-
+        Extract the name from the following data. Give me only the full name as a result
+
+        ```
+        ${user}
+        ```
+      model: Gemini 2.5 Flash
+      response: "${name}"
+    - name: Get summary
+      type: community-llm.LlmPrompt
+      capabilities:
+      - remote
+      prompt: |-
+        Please create a nice summary of the following data
+
+        ```
+        ${user}
+        ```
+      model: Gemini 2.5 Flash
+      response: "${summary}"
+    - name: "Verify summary for ${name}"
+      type: xlrelease.GateTask
+      description: "${summary}"
+      owner: admin
+  - phase: List failed releases
+    tasks:
+    - name: Find failed releases
+      type: community-llm.McpCallTool
+      capabilities:
+      - remote
+      server: Release MCP Server
+      tool: list_releases
+      input: |-
+        {
+          "request":
+          {
+           "failed": true
+          }
+        }
+      result: "${releases}"
+    - name: Create a summary
+      type: community-llm.LlmPrompt
+      capabilities:
+      - remote
+      prompt: |-
+        Make a summary of the failed releases:
+
+        ```
+        ${releases}
+        ```
+      model: Gemini 2.5 Flash
+      response: "${release_summary}"
+    - name: Verify
+      type: xlrelease.GateTask
+      description: |-
+        ## Failed releases
+
+        ${release_summary}
+      owner: admin
+    color: "#3d6c9e"
+  variables:
+  - type: xlrelease.StringVariable
+    key: user
+    requiresValue: false
+    showOnReleaseStart: false
+    label: User info
+    description: JSON info of user
+  - type: xlrelease.StringVariable
+    key: summary
+    requiresValue: false
+    showOnReleaseStart: false
+    label: User summary
+    description: The response from Google Gemini
+  - type: xlrelease.StringVariable
+    key: name
+    requiresValue: false
+    showOnReleaseStart: false
+    label: User name
+    description: Subject of the message.
+  - type: xlrelease.StringVariable
+    key: releases
+    requiresValue: false
+    showOnReleaseStart: false
+    label: ßReleases
+    description: Result
+  - type: xlrelease.StringVariable
+    key: release_summary
+    requiresValue: false
+    showOnReleaseStart: false
+    label: Failed release summary
+  riskProfile: Default risk profile

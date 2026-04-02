@@ -1,0 +1,49 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      26.1.0-322.130
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  path: /
+  home: AI Tasks Demo
+spec:
+- template: 2. Prompt examples
+  description: Test different models with the same prompt.
+  scheduledStartDate: 2026-04-02T09:31:10.270Z
+  dueDate: 2026-04-02T10:31:10.270Z
+  phases:
+  - phase: Test different models
+    tasks:
+    - name: Gemini
+      type: community-llm.LlmPrompt
+      taskFailureHandlerEnabled: true
+      taskRecoverOp: SKIP_TASK
+      capabilities:
+      - remote
+      prompt: "${prompt}"
+      model: Gemini 2.5 Flash-Lite
+    - name: OpenAI
+      type: community-llm.LlmPrompt
+      taskFailureHandlerEnabled: true
+      taskRecoverOp: SKIP_TASK
+      capabilities:
+      - remote
+      prompt: "${prompt}"
+      model: OpenAI GPT 5 nano
+    - name: Nova Micro  (Digital.ai LLM Service)
+      type: community-llm.LlmPrompt
+      taskFailureHandlerEnabled: true
+      taskRecoverOp: SKIP_TASK
+      capabilities:
+      - remote
+      prompt: "${prompt}"
+      model: Amazon Nova Micro 1:0
+  variables:
+  - type: xlrelease.StringVariable
+    key: prompt
+    label: Prompt
+    description: The prompt to be answered by the AI model
+    value: "Say hello world in six languages, one for each continent"
+    multiline: true
+  riskProfile: Default risk profile

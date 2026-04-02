@@ -1,0 +1,27 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      26.1.0-322.130
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  path: /
+  home: AI Tasks Demo
+spec:
+- template: 5.  Interactive Chat example
+  scheduledStartDate: 2026-04-02T09:31:10.344Z
+  dueDate: 2026-04-02T10:31:10.344Z
+  phases:
+  - phase: Prompt
+    tasks:
+    - name: Chat with agent
+      type: community-llm.LlmChat
+      capabilities:
+      - remote
+      model: Amazon Nova Micro 1:0
+    - name: OK?
+      type: xlrelease.GateTask
+      owner: admin
+  scriptUsername: admin
+  scriptUserPassword: !value "xlrelease_Release_5___Interactive_Chat_example_scriptUserPassword"
+  riskProfile: Default risk profile

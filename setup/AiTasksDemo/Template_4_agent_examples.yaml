@@ -1,0 +1,90 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      26.1.0-322.130
+
+---
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  path: /
+  home: AI Tasks Demo
+spec:
+- template: 4. Agent examples
+  description: "Example usage of the **AI: Agent** task"
+  scheduledStartDate: 2026-04-02T09:31:10.321Z
+  dueDate: 2026-04-02T10:31:10.321Z
+  phases:
+  - phase: Agent with MCP
+    tasks:
+    - name: Create user summary
+      type: community-llm.LlmAgent
+      capabilities:
+      - remote
+      prompt: Create a nice summary for the currently logged in user.
+      model: Gemini 2.5 Flash
+      mcpServer1: GitHub MCP Server
+      result: "${summary}"
+    - name: Verify
+      type: xlrelease.GateTask
+      description: |-
+        ## User details
+
+        ${summary}
+      owner: admin
+    color: "#3d6c9e"
+  - phase: Check phases
+    tasks:
+    - name: Analyze templates
+      type: community-llm.LlmAgent
+      capabilities:
+      - remote
+      prompt: Analyze all templates in the "AI Demo" folder and report on tasks that
+        are duplicated across templates.
+      model: Gemini 2.5 Flash
+      mcpServer1: Release MCP Server
+      result: "${duplicates}"
+    - name: Verify
+      type: xlrelease.GateTask
+      description: |-
+        ## Template summary
+
+        ${duplicates}
+    color: "#3d6c9e"
+  - phase: Multiple MCP servers
+    tasks:
+    - name: Create GitHub ticket for last failed release
+      type: community-llm.LlmAgent
+      description: Attempt to make the agent "create a ticket for the last release
+        that failed"
+      capabilities:
+      - remote
+      prompt: |-
+        List all releases in Digital.ai Release.
+
+        For the last release in FAILED state, create a GitHub issue in xebialabs-community/community-release-llm-integration repo to fix it.
+
+        Mention Release title, date and cause in the ticket
+      model: Gemini 2.5 Pro
+      mcpServer1: Release MCP Server
+      mcpServer2: GitHub MCP Server
+    - name: Verify
+      type: xlrelease.GateTask
+      description: |-
+        Check if there is a new issue created here:
+
+        * https://github.com/xebialabs-community/community-release-llm-integration/issues
+      owner: admin
+    color: "#3d6c9e"
+  variables:
+  - type: xlrelease.StringVariable
+    key: summary
+    requiresValue: false
+    showOnReleaseStart: false
+    label: Result
+    description: The result returned by the agent
+  - type: xlrelease.StringVariable
+    key: duplicates
+    requiresValue: false
+    showOnReleaseStart: false
+    label: Result
+    description: The result returned by the agent
+  riskProfile: Default risk profile

@@ -1,0 +1,16 @@
+# Exported from:        http://host.docker.internal:5516/
+# Release version:      26.1.0-322.130
+
+---
+apiVersion: xl-release/v1
+kind: Import
+spec:
+  imports:
+  - Connections.yaml
+  - Template_1_mcp_examples.yaml
+  - Template_2_prompt_examples.yaml
+  - Template_3_mcp_prompt_examples.yaml
+  - Template_4_agent_examples.yaml
+  - Template_5_interactive_chat_example.yaml
+  - Template_6_adaptive_orchestration_example.yaml
+  - Template_tasks_for_readme_screenshots.yaml
