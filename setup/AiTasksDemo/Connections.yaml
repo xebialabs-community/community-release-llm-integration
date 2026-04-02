@@ -8,15 +8,6 @@ metadata:
   path: /
   home: AI Tasks Demo
 spec:
-- name: Agility MCP Server
-  type: community-llm.McpServer
-  capabilities:
-  - remote
-  url: https://api.staging.digital.ai/agilitymcp/v1/mcp
-  authenticationMethod: None
-  headers:
-    X-Agility-Host: https://www7.v1host.com/V1Production
-    X-Agility-Bearer: 1.kqY4j5ce3Jm+THEi1bKzB5UQt6A=
 - name: GitHub MCP Server
   type: community-llm.McpServer
   password: !value "community_llm_McpServer_GitHub_MCP_Server_password"
