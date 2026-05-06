@@ -312,7 +312,7 @@ types:
       image:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
-      iconLocation: ai.png
+      iconLocation: agent.png
       taskColor: "#9E2FD7"
 
     input-properties:
