@@ -308,7 +308,8 @@ spec:
         showOnReleaseStart: false
         label: Result
         description: The result returned by the agent
-  - template: 5.  Interactive Chat example
+        
+  - template: 6.  Interactive Chat example
     phases:
       - phase: Prompt
         tasks:
@@ -321,7 +322,7 @@ spec:
     scriptUsername: admin
     scriptUserPassword: admin
 
-  - template: 6.  Adaptive Orchestration example
+  - template: 7.  Adaptive Orchestration example
     description: |
       "Demonstrates adaptive orchestration in Digital.ai Release by intentionally
       failing a task, introducing an AI Agent into the running release to assess the
@@ -426,9 +427,98 @@ spec:
     scriptUserPassword: !value "RELEASE_SCRIPT_PASSWORD"
     riskProfile: Default risk profile
 
+  - template: 5. Combined MCP + Prompt + Agent example
+    phases:
+      - phase: MCP + Prompt
+        tasks:
+          - name: Find failed releases
+            type: community-llm.McpCallTool
+            owner: admin
+            capabilities:
+              - remote
+            server: Release MCP Server
+            tool: list_releases
+            input: |-
+              {
+                "request":
+                {
+                 "failed": true
+                }
+              }
+            result: ${releases}
+          - name: Check result
+            type: xlrelease.Task
+            description: |-
+              Result from previous task:
+              
+              ```
+              ${releases}
+              ```
+              
+              The next task will create a human-readable summary.
+            owner: admin
+          - name: Create a summary
+            type: community-llm.LlmPrompt
+            owner: admin
+            variableMapping:
+              response: ${release_summary}
+            capabilities:
+              - remote
+            prompt: |-
+              Make a summary of the failed releases:
+              
+              ```
+              ${releases}
+              ```
+            model: Anthropic Sonnet 4.5
+          - name: View summary
+            type: xlrelease.Task
+            description: |-
+              ## Failed releases
+              
+              ${release_summary}
+            owner: admin
+        color: "#3d6c9e"
+      - phase: Agent
+        tasks:
+          - name: Create GitHub ticket for last failed release
+            type: community-llm.LlmAgent
+            description: Attempt to make the agent "create a ticket for the last release
+              that failed"
+            owner: admin
+            capabilities:
+              - remote
+            prompt: |-
+              List all releases in Digital.ai Release.
+              
+              For the last release in FAILED state, create a GitHub issue in xebialabs-community/community-release-llm-integration repo to fix it.
+              
+              Mention Release title, date and cause in the ticket
+            model: Anthropic Sonnet 4.5
+            mcpServer1: Release MCP Server
+            mcpServer2: GitHub MCP Server
+          - name: Verify issue
+            type: xlrelease.Task
+            description: |-
+              Check if there is a new issue created here:
+              
+              * https://github.com/xebialabs-community/community-release-llm-integration/issues
+            owner: admin
+        color: "#3d6c9e"
+    variables:
+      - type: xlrelease.StringVariable
+        key: releases
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Releases
+        description: Result
+      - type: xlrelease.StringVariable
+        key: release_summary
+        requiresValue: false
+        showOnReleaseStart: false
+        label: Failed release summary
+
   - template: LLM Shoot-out
-    defaultTargetFolder: AI Demo
-    allowTargetFolderOverride: false
     phases:
       - phase: Compare and judge
         tasks:
