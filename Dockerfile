@@ -1,5 +1,5 @@
 # Use the Python image as the base
-FROM python:alpine3.21
+FROM python:3.12-slim
 
 # Prevent Python from writing bytecode files and run in unbuffered mode
 ENV PYTHONDONTWRITEBYTECODE=1
