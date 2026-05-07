@@ -1,5 +1,5 @@
 # Use the Python image as the base
-FROM python:alpine3.21
+FROM python:3.13-slim
 
 # Prevent Python from writing bytecode files and run in unbuffered mode
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -11,11 +11,11 @@ RUN mkdir /app && chmod -R 777 /app
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements.txt first to leverage Docker cache
-COPY requirements.txt ./
+# Copy lockfile first to leverage Docker cache
+COPY requirements.lock ./
 
-# Install dependencies. This layer will be cached unless requirements.txt changes
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies. This layer will be cached unless requirements.lock changes
+RUN pip install --no-cache-dir -r requirements.lock
 
 # Copy the rest of the source code
 COPY . .
