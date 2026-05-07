@@ -171,7 +171,7 @@ types:
       apiKey:
         label: API Key
         description: API Key for the LLM provider
-        required: true
+        required: false
         password: true
       model_id:
         label: AI Model
@@ -190,7 +190,7 @@ types:
       apiKey:
         label: Gemini API Key
         description: API Key for Google Gemini
-        required: true
+        required: false
         password: true
       model_id:
         label: Model
@@ -215,7 +215,7 @@ types:
       apiKey:
         label: API Key
         description: API Key for the LLM provider
-        required: true
+        required: false
         password: true
       model_id:
         label: Model
@@ -239,7 +239,7 @@ types:
       apiKey:
         label: API Key
         description: API Key for the LLM provider
-        required: true
+        required: false
         password: true
       model_id:
         label: Model
@@ -312,7 +312,7 @@ types:
       image:
         default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
         transient: true
-      iconLocation: ai.png
+      iconLocation: agent.png
       taskColor: "#9E2FD7"
 
     input-properties:

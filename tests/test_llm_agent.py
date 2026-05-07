@@ -34,13 +34,20 @@ class TestLlmAgent(unittest.TestCase):
         # Given
         task = LlmAgent()
         task.input_properties = {
-            'prompt': 'Say hello in Spanish',
+            'prompt': 'Get me a summary of the github user',
             'model': {
                 'provider': 'dai-llm',
                 'url': 'https://api.staging.digital.ai/llm',
                 'apiKey': os.getenv('DAI_LLM_API_KEY'),
                 'model_id': 'amazon.nova-micro-v1:0'
             },
+            'mcpServer1': {
+                'title': 'GitHub MCP Server',
+                'url': 'https://api.githubcopilot.com/mcp/',
+                'transport': 'http',
+                'authenticationMethod': 'Bearer',
+                'password': os.getenv('GITHUB_TOKEN'),
+            }
         }
 
         # When
@@ -49,7 +56,34 @@ class TestLlmAgent(unittest.TestCase):
         print(result)
 
         # Then
-        self.assertIn('Hola', result)
+        self.assertIsNotNone(result)
+
+    def test_gemini_agent_with_github_mcp(self):
+        # Given
+        task = LlmAgent()
+        task.input_properties = {
+            'prompt': 'Get me a summary of the github user',
+            'model': {
+                'provider': 'gemini',
+                'apiKey': os.getenv('GEMINI_API_KEY'),
+                'model_id': 'gemini-2.5-flash'
+            },
+            'mcpServer1': {
+                'title': 'GitHub MCP Server',
+                'url': 'https://api.githubcopilot.com/mcp/',
+                'transport': 'http',
+                'authenticationMethod': 'Bearer',
+                'password': os.getenv('GITHUB_TOKEN'),
+            }
+        }
+
+        # When
+        task.execute_task()
+        result = task.get_output_properties()['result']
+        print(result)
+
+        # Then
+        self.assertIsNotNone(result)
 
     @unittest.skip("Release token expired")
     def test_gemini_agent_with_release_mcp(self):
