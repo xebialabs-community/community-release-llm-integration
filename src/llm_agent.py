@@ -1,4 +1,5 @@
 import asyncio
+import copy
 
 from digitalai.release.integration import BaseTask
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
@@ -68,6 +69,9 @@ async def send_prompt(prompt, model, mcp_servers):
         for tool in server_tools:
             tool_copy = tool.model_copy()
             tool_copy.name = f"{prefix}__{tool.name}"
+            if isinstance(tool_copy.args_schema, dict):
+                tool_copy.args_schema = copy.deepcopy(tool_copy.args_schema)
+                _fix_array_schemas(tool_copy.args_schema)
             tools.append(tool_copy)
         server_descriptions.append(f"- '{server_name}' (tool prefix: '{prefix}__')")
 
@@ -90,6 +94,31 @@ async def send_prompt(prompt, model, mcp_servers):
     response = await agent.ainvoke({"messages": prompt})
 
     return response
+
+
+def _fix_array_schemas(schema):
+    """Recursively fix array type schemas for Gemini API compatibility.
+
+    Gemini requires:
+    1. Array types must have 'items' defined.
+    2. Properties with anyOf containing an array variant must have 'items' at top level,
+       because langchain_google_genai picks ARRAY as the type but looks for items
+       at the top level of the property, not inside anyOf.
+    """
+    if isinstance(schema, dict):
+        if schema.get('type') == 'array' and 'items' not in schema:
+            schema['items'] = {'type': 'string'}
+        # Hoist items from anyOf array variant to top level
+        if 'anyOf' in schema and 'items' not in schema:
+            for variant in schema['anyOf']:
+                if isinstance(variant, dict) and variant.get('type') == 'array':
+                    schema['items'] = variant.get('items', {'type': 'string'})
+                    break
+        for value in schema.values():
+            _fix_array_schemas(value)
+    elif isinstance(schema, list):
+        for item in schema:
+            _fix_array_schemas(item)
 
 
 def last_agent_message(output):
