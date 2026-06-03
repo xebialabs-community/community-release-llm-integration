@@ -1,5 +1,6 @@
 from digitalai.release.integration import BaseTask
 
+from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 
@@ -64,6 +65,15 @@ def create_model(model):
                 'X-Digitalai-AppName': 'Release',
             },
             temperature=0.0
+        )
+    if provider == 'anthropic':
+        return ChatAnthropic(
+            api_key=model['apiKey'],
+            model=model['model_id'],
+            temperature=0,
+            max_tokens=1024,
+            timeout=None,
+            max_retries=2,
         )
     raise ValueError(f"Provider {provider} is not supported")
 

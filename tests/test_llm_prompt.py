@@ -77,6 +77,27 @@ class TestLlmPrompt(unittest.TestCase):
         # Then
         self.assertIn('Hola', result)
 
+    def test_anthropic_prompt(self):
+        # Given
+        task = LlmPrompt()
+        task.input_properties = {
+            'prompt': 'Say hello in Spanish',
+            'model': {
+                'provider': 'anthropic',
+                'apiKey': os.getenv('ANTHROPIC_API_KEY'),
+                'model_id': 'claude-haiku-4-5'
+            },
+        }
+
+        # When
+        task.execute_task()
+
+        result = task.get_output_properties()['response']
+        print(result)
+
+        # Then
+        self.assertIn('Hola', result)
+
     def test_local_docker_llm_prompt(self):
         # Given
         task = LlmPrompt()
