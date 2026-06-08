@@ -46,6 +46,12 @@ types:
         description: Additional HTTP headers to include in requests
         kind: map_string_string
         required: false
+      capabilities:
+        category: Runner
+        description: Route jobs to particular types of remote runners based on capabilities
+        kind: set_of_string
+        default: remote
+        required: true
 
     hidden-properties:
       testConnectionScript: community-llm.McpTestConnection
@@ -177,6 +183,12 @@ types:
         label: AI Model
         description: The model to use
         kind: string
+      capabilities:
+        category: Runner
+        description: Route jobs to particular types of remote runners based on capabilities
+        kind: set_of_string
+        default: remote
+        required: true
 
   community-llm.GeminiModel:
     extends: community-llm.BaseModel
