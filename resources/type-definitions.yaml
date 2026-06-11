@@ -258,6 +258,26 @@ types:
         description: The model to use
         kind: string
 
+  community-llm.AnthropicModel:
+    extends: community-llm.BaseModel
+    label: "AI Model: Anthropic"
+
+    hidden-properties:
+      provider:
+        default: anthropic
+
+    properties:
+      apiKey:
+        label: Anthropic API Key
+        description: API Key for Anthropic
+        required: false
+        password: true
+      model_id:
+        label: Model
+        description: The model to use
+        kind: string
+        default: claude-opus-4-5
+
   #
   # LLM tasks
   #

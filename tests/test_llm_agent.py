@@ -58,6 +58,26 @@ class TestLlmAgent(unittest.TestCase):
         # Then
         self.assertIsNotNone(result)
 
+    def test_anthropic_agent_prompt(self):
+        # Given
+        task = LlmAgent()
+        task.input_properties = {
+            'prompt': 'Say hello in Spanish',
+            'model': {
+                'provider': 'anthropic',
+                'apiKey': os.getenv('ANTHROPIC_API_KEY'),
+                'model_id': 'claude-haiku-4-5'
+            },
+        }
+
+        # When
+        task.execute_task()
+        result = task.get_output_properties()['result']
+        print(result)
+
+        # Then
+        self.assertIn('Hola', result)
+
     def test_gemini_agent_with_github_mcp(self):
         # Given
         task = LlmAgent()
